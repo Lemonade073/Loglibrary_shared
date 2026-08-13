@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>로그 도서관</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="도서관">
+<meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16171A" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'RIDIBatang';
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+  font-weight:normal;font-style:normal;font-display:swap}
+:root{
+  --paper:#F7F5F0;--paper-2:#FFFFFF;--ink:#22201C;--ink-2:#6B665C;
+  --ink-3:#9C968A;--rule:#E2DED4;--accent:#5B6B58;--accent-soft:#EDF0EA;
+  --w:min(560px,100%);--serif:'RIDIBatang','Gowun Batang',serif;
+}
+[data-theme="white"]{--paper:#FFF;--paper-2:#FFF;--ink:#1A1A1A;--ink-2:#5C5C5C;
+  --ink-3:#9A9A9A;--rule:#EAEAEA;--accent:#4A5A47;--accent-soft:#F2F4F1}
+[data-theme="night"]{--paper:#16171A;--paper-2:#1D1F23;--ink:#DBD8D1;--ink-2:#948F86;
+  --ink-3:#6A665F;--rule:#2C2F34;--accent:#8FA88A;--accent-soft:#232821}
+[data-theme="sepia"]{--paper:#EFE6D6;--paper-2:#F7F0E3;--ink:#3A3227;--ink-2:#7A6E5C;
+  --ink-3:#A0937D;--rule:#DDD1BC;--accent:#8A6A3E;--accent-soft:#E7DCC6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:'IBM Plex Sans KR',system-ui,sans-serif;font-weight:300;
+  padding-bottom:env(safe-area-inset-bottom)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit}
+.hide{display:none!important}
+main{max-width:var(--w);margin:0 auto;padding:44px 22px 70px}
+
+#login{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
+#login .box{width:min(330px,100%)}
+#login h1{font-family:var(--serif);font-size:25px;font-weight:400;margin-bottom:3px}
+#login p{font-size:13px;color:var(--ink-3);margin-bottom:22px}
+#login input{width:100%;padding:11px 13px;margin-bottom:9px;background:var(--paper-2);
+  border:1px solid var(--rule);border-radius:7px;color:var(--ink);outline:none}
+#login input:focus{border-color:var(--accent)}
+#login button{width:100%;padding:11px;background:var(--ink);color:var(--paper);
+  border-radius:7px;font-weight:500;font-size:14px;margin-top:6px}
+.err{font-size:12px;color:#B4544A;margin-top:10px;min-height:16px}
+
+/* 프로필 */
+.hero{display:flex;gap:17px;align-items:center;margin-bottom:26px}
+.hero .pic{width:66px;height:66px;border-radius:17px;background:var(--accent-soft);
+  display:grid;place-items:center;font-size:30px;flex-shrink:0;overflow:hidden;
+  border:1px solid var(--rule);line-height:1}
+.hero .pic img{width:100%;height:100%;object-fit:cover}
+.hero .b{flex:1;min-width:0}
+.hero h1{font-family:var(--serif);font-size:22px;font-weight:400;margin-bottom:6px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero .st{font-size:11.5px;color:var(--ink-3);display:flex;gap:9px;flex-wrap:wrap}
+.hero .st b{font-weight:400;color:var(--ink-2)}
+.hero .ed{font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  padding:4px 10px;border-radius:15px;flex-shrink:0;align-self:flex-start}
+.hero .ed:hover{border-color:var(--accent);color:var(--accent)}
+
+.lab{font-size:11px;color:var(--ink-3);letter-spacing:.07em;margin-bottom:9px}
+.sec{margin-bottom:28px}
+
+/* 읽던 곳 */
+.cont{display:flex;align-items:center;gap:13px;background:var(--paper-2);
+  border:1px solid var(--rule);border-radius:12px;padding:15px 17px;transition:border-color .15s}
+.cont:hover{border-color:var(--accent)}
+.cont .t{flex:1;min-width:0}
+.cont .t b{font-family:var(--serif);font-size:15px;font-weight:400;display:block;margin-bottom:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cont .t span{font-size:11.5px;color:var(--ink-3)}
+.cont .bar{width:70px;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;flex-shrink:0}
+.cont .bar i{display:block;height:100%;background:var(--accent)}
+.cont .go{font-size:12px;color:var(--accent);white-space:nowrap}
+
+/* 메뉴 */
+.menu{border-top:1px solid var(--rule)}
+.menu a{display:flex;align-items:center;gap:13px;padding:15px 3px;
+  border-bottom:1px solid var(--rule);transition:padding-left .15s}
+.menu a:hover{padding-left:9px}
+.menu .ic{font-size:16px;width:20px;text-align:center;line-height:1}
+.menu .nm{flex:1;font-size:14px}
+.menu .sub{font-size:11.5px;color:var(--ink-3)}
+.menu .ar{font-size:12px;color:var(--ink-3)}
+
+.foot{padding-top:22px;font-size:10.5px;color:var(--ink-3);line-height:1.9;
+  display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.foot button{font-size:10.5px;color:var(--ink-3)}
+
+/* 시트 */
+#scrim{position:fixed;inset:0;background:#0006;z-index:19;opacity:0;
+  pointer-events:none;transition:opacity .24s}
+#scrim.on{opacity:1;pointer-events:auto}
+#sheet{position:fixed;inset:auto 0 0 0;background:var(--paper-2);z-index:20;
+  border-top:1px solid var(--rule);border-radius:14px 14px 0 0;
+  padding:20px 22px calc(26px + env(safe-area-inset-bottom));
+  transform:translateY(101%);transition:transform .24s;max-height:86dvh;overflow:auto}
+#sheet.on{transform:none}
+#sheet .in{max-width:var(--w);margin:0 auto}
+#sheet h3{font-family:var(--serif);font-size:15px;font-weight:400;margin-bottom:16px}
+#sheet label{display:block;font-size:11.5px;color:var(--ink-3);margin:0 0 5px}
+#sheet input{width:100%;padding:10px 12px;margin-bottom:6px;background:var(--paper);
+  border:1px solid var(--rule);border-radius:8px;color:var(--ink);outline:none;font-size:13.5px}
+#sheet input:focus{border-color:var(--accent)}
+#sheet .hint{font-size:11px;color:var(--ink-3);margin-bottom:14px;line-height:1.6}
+#sheet .pv{display:flex;align-items:center;gap:11px;margin-bottom:16px}
+#sheet .pv .box{width:52px;height:52px;border-radius:14px;background:var(--accent-soft);
+  border:1px solid var(--rule);display:grid;place-items:center;font-size:24px;
+  overflow:hidden;line-height:1}
+#sheet .pv .box img{width:100%;height:100%;object-fit:cover}
+#sheet .pv span{font-size:11px;color:var(--ink-3)}
+#sheet .row{display:flex;gap:9px;margin-top:4px}
+#sheet .row button{flex:1;padding:11px;border-radius:8px;font-size:13.5px;font-weight:500}
+#sheet .ok{background:var(--ink);color:var(--paper)}
+#sheet .no{border:1px solid var(--rule);color:var(--ink-2)}
+</style>
+</head>
+<body>
+
+<div id="login" class="hide">
+  <div class="box">
+    <h1>로그 도서관</h1>
+    <p>들어가려면 로그인</p>
+    <input id="em" type="email" placeholder="이메일" autocomplete="username">
+    <input id="pw" type="password" placeholder="비밀번호" autocomplete="current-password">
+    <button id="go">들어가기</button>
+    <div class="err" id="lerr"></div>
+  </div>
+</div>
+
+<main id="app" class="hide">
+  <div class="hero">
+    <div class="pic" id="pic">🐈</div>
+    <div class="b">
+      <h1 id="pname">로그 도서관</h1>
+      <div class="st" id="pst"></div>
+    </div>
+    <button class="ed" id="pedit">고치기</button>
+  </div>
+
+  <div class="sec hide" id="sec-cont">
+    <div class="lab">읽던 곳</div>
+    <div id="cont"></div>
+  </div>
+
+  <div class="sec">
+    <div class="lab">메뉴</div>
+    <div class="menu">
+      <a href="./import.html"><span class="ic">📥</span><span class="nm">로그 추가하기</span><span class="ar">→</span></a>
+      <a href="./shelf.html"><span class="ic">📖</span><span class="nm">도서관</span><span class="sub" id="m-lib"></span><span class="ar">→</span></a>
+      <a href="./chars.html"><span class="ic">🎭</span><span class="nm">캐릭터</span><span class="sub" id="m-ch"></span><span class="ar">→</span></a>
+      <a href="./trash.html"><span class="ic">🗑</span><span class="nm">휴지통</span><span class="sub" id="m-tr"></span><span class="ar">→</span></a>
+      <a href="./settings.html"><span class="ic">⚙️</span><span class="nm">설정</span><span class="sub" id="m-set"></span><span class="ar">→</span></a>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span></span>
+    <button id="out">로그아웃</button>
+  </div>
+</main>
+
+<div id="scrim"></div>
+<div id="sheet"><div class="in" id="sheetIn"></div></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { CFG } from './config.js';
+import { loadStyles, applyTheme } from './theme.js';
+
+const sb = createClient(CFG.url, CFG.key);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+applyTheme(localStorage.getItem('theme') || 'day');
+loadStyles(sb).then(() => applyTheme(localStorage.getItem('theme') || 'day'));
+
+// 아바타: http 로 시작하면 이미지, 아니면 이모지/글자
+const avatar = (v, fallback) => {
+  const s = String(v ?? '').trim();
+  if (!s) return esc(fallback);
+  return /^https?:\/\//i.test(s) ? `<img src="${esc(s)}" alt="">` : esc(s);
+};
+
+$('go').onclick = async () => {
+  $('lerr').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email: $('em').value.trim(), password: $('pw').value });
+  if (error) return $('lerr').textContent = '이메일이나 비밀번호를 다시 확인해줘';
+  boot();
+};
+$('pw').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
+$('out').onclick = async () => { await sb.auth.signOut(); location.reload(); };
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) boot();
+  else $('login').classList.remove('hide');
+});
+
+const openSheet = h => { $('sheetIn').innerHTML = h; $('sheet').classList.add('on'); $('scrim').classList.add('on'); };
+const shut = () => { $('sheet').classList.remove('on'); $('scrim').classList.remove('on'); };
+$('scrim').onclick = shut;
+
+let profile = null;
+
+async function boot() {
+  $('login').classList.add('hide');
+  $('app').classList.remove('hide');
+
+  const [prof, logs, reads, cast, chars, trash] = await Promise.all([
+    sb.from('profile').select('*').eq('id', 1).maybeSingle(),
+    sb.from('logs').select('id,title,message_count').is('deleted_at', null),
+    sb.from('read_state').select('log_id,seq,updated_at').order('updated_at', { ascending: false }).limit(1),
+    sb.from('log_cast').select('log_id,characters(name)'),
+    sb.from('characters').select('id', { count: 'exact', head: true }),
+    sb.from('logs').select('id', { count: 'exact', head: true }).not('deleted_at', 'is', null),
+  ]);
+
+  profile = prof.data;
+  $('pname').textContent = profile?.display_name || '로그 도서관';
+  $('pic').innerHTML = avatar(profile?.avatar_url, '🐈');
+
+  const L = logs.data || [];
+  const eps = L.reduce((a, b) => a + (b.message_count || 0), 0);
+  const nc = chars.count || 0;
+
+  $('pst').innerHTML =
+    `<span>캐릭터 <b>${nc}</b>명</span>` +
+    `<span>로그 <b>${L.length}</b>권</span>` +
+    `<span><b>${eps.toLocaleString()}</b>편</span>`;
+  $('m-lib').textContent = `${L.length}권`;
+  $('m-ch').textContent = `${nc}명`;
+  $('m-tr').textContent = trash.count ? `${trash.count}권` : '';
+
+  const r = reads.data?.[0];
+  const lg = r && L.find(x => x.id === r.log_id);
+  if (lg) {
+    const pct = lg.message_count ? Math.round((r.seq + 1) / lg.message_count * 100) : 0;
+    const names = (cast.data || []).filter(c => c.log_id === lg.id)
+      .map(c => c.characters?.name).filter(Boolean).join(' · ');
+    $('sec-cont').classList.remove('hide');
+    $('cont').innerHTML = `<a class="cont" href="./shelf.html?log=${lg.id}">
+      <div class="t"><b>${esc(lg.title || '제목 없음')}</b>
+        <span>${esc(names || '—')} · ${r.seq + 1} / ${lg.message_count}편</span></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+      <span class="go">이어읽기</span></a>`;
+  } else {
+    $('sec-cont').classList.add('hide');
+  }
+}
+
+$('pedit').onclick = () => {
+  openSheet(`
+    <h3>도서관 고치기</h3>
+    <div class="pv">
+      <div class="box" id="pv">${avatar(profile?.avatar_url, '🐈')}</div>
+      <span>미리보기</span>
+    </div>
+    <label>이름</label>
+    <input id="f-n" value="${esc(profile?.display_name || '로그 도서관')}">
+    <div class="hint"></div>
+    <label>아바타</label>
+    <input id="f-a" value="${esc(profile?.avatar_url || '')}" placeholder="🐈 또는 https://...">
+    <div class="hint">이모지를 그대로 붙여넣거나, 이미지 주소를 넣어도 돼.</div>
+    <div class="row">
+      <button class="no" id="f-x">닫기</button>
+      <button class="ok" id="f-s">저장</button>
+    </div>
+  `);
+  const pv = () => { $('pv').innerHTML = avatar($('f-a').value, '🐈'); };
+  $('f-a').oninput = pv;
+  $('f-x').onclick = shut;
+  $('f-s').onclick = async () => {
+    const { error } = await sb.from('profile').upsert({
+      id: 1,
+      display_name: $('f-n').value.trim() || '로그 도서관',
+      avatar_url: $('f-a').value.trim() || null,
+      updated_at: new Date().toISOString(),
+    });
+    if (error) return alert('저장 실패: ' + error.message);
+    shut(); boot();
+  };
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>휴지통</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16171A" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'RIDIBatang';
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+  font-weight:normal;font-style:normal;font-display:swap}
+:root{
+  --paper:#F7F5F0;--paper-2:#FFFFFF;--ink:#22201C;--ink-2:#6B665C;
+  --ink-3:#9C968A;--rule:#E2DED4;--accent:#5B6B58;--accent-soft:#EDF0EA;
+  --warn:#B4544A;--w:min(560px,100%);--serif:'RIDIBatang','Gowun Batang',serif;
+}
+[data-theme="white"]{--paper:#FFF;--paper-2:#FFF;--ink:#1A1A1A;--ink-2:#5C5C5C;
+  --ink-3:#9A9A9A;--rule:#EAEAEA;--accent:#4A5A47;--accent-soft:#F2F4F1}
+[data-theme="night"]{--paper:#16171A;--paper-2:#1D1F23;--ink:#DBD8D1;--ink-2:#948F86;
+  --ink-3:#6A665F;--rule:#2C2F34;--accent:#8FA88A;--accent-soft:#232821}
+[data-theme="sepia"]{--paper:#EFE6D6;--paper-2:#F7F0E3;--ink:#3A3227;--ink-2:#7A6E5C;
+  --ink-3:#A0937D;--rule:#DDD1BC;--accent:#8A6A3E;--accent-soft:#E7DCC6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:'IBM Plex Sans KR',system-ui,sans-serif;font-weight:300;
+  padding-bottom:env(safe-area-inset-bottom)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit}
+.hide{display:none!important}
+main{max-width:var(--w);margin:0 auto;padding:32px 22px 70px}
+
+#login{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
+#login .box{width:min(330px,100%)}
+#login h1{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:18px}
+#login input{width:100%;padding:11px 13px;margin-bottom:9px;background:var(--paper-2);
+  border:1px solid var(--rule);border-radius:7px;color:var(--ink);outline:none}
+#login button{width:100%;padding:11px;background:var(--ink);color:var(--paper);
+  border-radius:7px;font-weight:500;font-size:14px;margin-top:6px}
+.err{font-size:12px;color:var(--warn);margin-top:10px;min-height:16px}
+
+.head{display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:13px;border-bottom:1px solid var(--rule);margin-bottom:20px}
+.head h1{font-family:var(--serif);font-size:21px;font-weight:400}
+.head h1 a{color:var(--ink-3);font-size:14px;margin-right:7px}
+.head .n{font-size:11.5px;color:var(--ink-3)}
+
+.info{font-size:11.5px;color:var(--ink-3);line-height:1.75;margin-bottom:18px}
+
+.tz{display:flex;align-items:center;gap:9px;padding:13px 2px;border-bottom:1px solid var(--rule)}
+.tz .b{flex:1;min-width:0}
+.tz .t{font-family:var(--serif);font-size:14.5px;margin-bottom:3px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tz .d{font-size:11px;color:var(--ink-3)}
+.tz .d.soon{color:var(--warn)}
+.tz button{font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:14px;padding:3px 10px;white-space:nowrap}
+.tz button:hover{border-color:var(--accent);color:var(--accent)}
+.tz button.rm:hover{border-color:var(--warn);color:var(--warn)}
+
+.empty{text-align:center;color:var(--ink-3);font-size:13px;padding:52px 0}
+.empty span{font-size:26px;display:block;margin-bottom:11px;line-height:1}
+.btn{width:100%;padding:12px;border-radius:9px;font-size:13.5px;font-weight:500;
+  border:1px solid var(--rule);color:var(--warn);margin-top:22px}
+.btn:hover{border-color:var(--warn)}
+.stat{font-size:11.5px;color:var(--ink-3);margin-top:12px;text-align:center;min-height:16px}
+.stat.ok{color:var(--accent)}
+.stat.err{color:var(--warn)}
+</style>
+</head>
+<body>
+
+<div id="login" class="hide">
+  <div class="box">
+    <h1>휴지통</h1>
+    <input id="em" type="email" placeholder="이메일" autocomplete="username">
+    <input id="pw" type="password" placeholder="비밀번호" autocomplete="current-password">
+    <button id="go">로그인</button>
+    <div class="err" id="lerr"></div>
+  </div>
+</div>
+
+<main id="app" class="hide">
+  <div class="head">
+    <h1><a href="./index.html">←</a>휴지통</h1>
+    <span class="n" id="cnt"></span>
+  </div>
+  <p class="info">지운 로그는 여기 3일 머물러. 그 뒤엔 사이트를 열 때 자동으로 완전히 지워져.</p>
+  <div id="list"></div>
+  <button class="btn hide" id="empty">지금 비우기</button>
+  <div class="stat" id="msg"></div>
+</main>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { CFG } from './config.js';
+import { loadStyles, applyTheme } from './theme.js';
+
+const sb = createClient(CFG.url, CFG.key);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+applyTheme(localStorage.getItem('theme') || 'day');
+loadStyles(sb).then(() => applyTheme(localStorage.getItem('theme') || 'day'));
+
+const KEEP = 3 * 86400000;
+const msg = (t, cls) => { $('msg').textContent = t; $('msg').className = 'stat' + (cls ? ' ' + cls : ''); };
+
+$('go').onclick = async () => {
+  $('lerr').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email: $('em').value.trim(), password: $('pw').value });
+  if (error) return $('lerr').textContent = '이메일이나 비밀번호를 다시 확인해줘';
+  boot();
+};
+$('pw').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) boot();
+  else $('login').classList.remove('hide');
+});
+
+function boot() {
+  $('login').classList.add('hide');
+  $('app').classList.remove('hide');
+  load();
+}
+
+async function load() {
+  const cut = new Date(Date.now() - KEEP).toISOString();
+  await sb.from('logs').delete().lt('deleted_at', cut);
+
+  const { data, error } = await sb.from('logs')
+    .select('id,title,kind,message_count,deleted_at')
+    .not('deleted_at', 'is', null)
+    .order('deleted_at', { ascending: false });
+
+  if (error) {
+    $('list').innerHTML = `<div class="empty">${esc(error.message)}</div>`;
+    return;
+  }
+
+  $('cnt').textContent = data.length ? `${data.length}권` : '';
+  $('empty').classList.toggle('hide', !data.length);
+
+  if (!data.length) {
+    $('list').innerHTML = '<div class="empty"><span>🗑</span>비어 있어</div>';
+    return;
+  }
+
+  $('list').innerHTML = data.map(l => {
+    const left = KEEP - (Date.now() - new Date(l.deleted_at).getTime());
+    const h = Math.max(0, Math.floor(left / 3600000));
+    const txt = h >= 24 ? `${Math.floor(h / 24)}일 ${h % 24}시간 뒤 삭제` : `${h}시간 뒤 삭제`;
+    return `<div class="tz">
+      <div class="b">
+        <div class="t">${esc(l.title || '제목 없음')}</div>
+        <div class="d ${h < 24 ? 'soon' : ''}">${l.message_count || 0}편 · ${txt}</div>
+      </div>
+      <button data-back="${l.id}">되살리기</button>
+      <button class="rm" data-gone="${l.id}">완전 삭제</button>
+    </div>`;
+  }).join('');
+
+  const q = (sel, fn) => $('list').querySelectorAll(sel).forEach(b => b.onclick = () => fn(b.dataset));
+  q('[data-back]', async d => {
+    const { error } = await sb.from('logs').update({ deleted_at: null }).eq('id', d.back);
+    if (error) return msg(error.message, 'err');
+    msg('되살렸어. 도서관에서 볼 수 있어.', 'ok');
+    load();
+  });
+  q('[data-gone]', async d => {
+    if (!confirm('메시지까지 통째로 지울까? 되돌릴 수 없어.')) return;
+    const { error } = await sb.from('logs').delete().eq('id', d.gone);
+    if (error) return msg(error.message, 'err');
+    msg('');
+    load();
+  });
+}
+
+$('empty').onclick = async () => {
+  if (!confirm('휴지통을 통째로 비울까? 되돌릴 수 없어.')) return;
+  const { error } = await sb.from('logs').delete().not('deleted_at', 'is', null);
+  if (error) return msg(error.message, 'err');
+  msg('비웠어', 'ok');
+  load();
+};
+</script>
+</body>
+</html>

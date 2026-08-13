@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>캐릭터</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16171A" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'RIDIBatang';
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+  font-weight:normal;font-style:normal;font-display:swap}
+:root{
+  --paper:#F7F5F0;--paper-2:#FFFFFF;--ink:#22201C;--ink-2:#6B665C;
+  --ink-3:#9C968A;--rule:#E2DED4;--accent:#5B6B58;--accent-soft:#EDF0EA;
+  --warn:#B4544A;--w:min(720px,100%);--serif:'RIDIBatang','Gowun Batang',serif;
+}
+[data-theme="white"]{--paper:#FFF;--paper-2:#FFF;--ink:#1A1A1A;--ink-2:#5C5C5C;
+  --ink-3:#9A9A9A;--rule:#EAEAEA;--accent:#4A5A47;--accent-soft:#F2F4F1}
+[data-theme="night"]{--paper:#16171A;--paper-2:#1D1F23;--ink:#DBD8D1;--ink-2:#948F86;
+  --ink-3:#6A665F;--rule:#2C2F34;--accent:#8FA88A;--accent-soft:#232821}
+[data-theme="sepia"]{--paper:#EFE6D6;--paper-2:#F7F0E3;--ink:#3A3227;--ink-2:#7A6E5C;
+  --ink-3:#A0937D;--rule:#DDD1BC;--accent:#8A6A3E;--accent-soft:#E7DCC6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:'IBM Plex Sans KR',system-ui,sans-serif;font-weight:300;
+  padding-bottom:env(safe-area-inset-bottom)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select,textarea{font:inherit}
+.hide{display:none!important}
+main{max-width:var(--w);margin:0 auto;padding:28px 20px 80px}
+
+#login{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
+#login .box{width:min(330px,100%)}
+#login h1{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:18px}
+#login input{width:100%;padding:11px 13px;margin-bottom:9px;background:var(--paper-2);
+  border:1px solid var(--rule);border-radius:7px;color:var(--ink);outline:none}
+#login button{width:100%;padding:11px;background:var(--ink);color:var(--paper);
+  border-radius:7px;font-weight:500;font-size:14px;margin-top:6px}
+.err{font-size:12px;color:var(--warn);margin-top:10px;min-height:16px}
+
+.head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+  padding-bottom:13px;border-bottom:1px solid var(--rule);margin-bottom:18px}
+.head h1{font-family:var(--serif);font-size:21px;font-weight:400}
+.head h1 a{color:var(--ink-3);font-size:14px;margin-right:7px}
+.head .r{font-size:11.5px;color:var(--ink-3);display:flex;gap:11px}
+.head .r button:hover{color:var(--accent)}
+
+/* 목록 */
+.faces{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:16px 10px;padding:6px 0}
+.face{text-align:center}
+.face .av{width:62px;height:62px;border-radius:50%;background:var(--accent-soft);
+  margin:0 auto 8px;display:grid;place-items:center;font-size:20px;font-family:var(--serif);
+  border:1px solid var(--rule);overflow:hidden;transition:border-color .15s}
+.face:hover .av{border-color:var(--accent)}
+.face .av img{width:100%;height:100%;object-fit:cover}
+.face b{font-size:12.5px;font-weight:400;display:block;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.face span{font-size:10.5px;color:var(--ink-3)}
+
+/* 상세 프로필 */
+.prof{display:flex;gap:16px;align-items:flex-start;margin-bottom:8px}
+.prof .av{width:70px;height:70px;border-radius:16px;background:var(--accent-soft);
+  display:grid;place-items:center;font-size:26px;font-family:var(--serif);
+  flex-shrink:0;overflow:hidden;border:1px solid var(--rule)}
+.prof .av img{width:100%;height:100%;object-fit:cover}
+.prof .b{flex:1;min-width:0}
+.prof h2{font-family:var(--serif);font-size:20px;font-weight:400;margin-bottom:5px}
+.prof p{font-size:12.5px;color:var(--ink-2);line-height:1.7;white-space:pre-wrap;margin-bottom:7px}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tags span{font-size:10.5px;padding:1px 8px;border-radius:14px;
+  background:var(--accent-soft);color:var(--accent)}
+
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 12px}
+.bar button{font-size:11.5px;padding:5px 12px;border:1px solid var(--rule);
+  border-radius:16px;color:var(--ink-2)}
+.bar button:hover{border-color:var(--accent);color:var(--accent)}
+
+/* 폴더 트리 */
+.fold{margin-bottom:3px}
+.fold .fh{display:flex;align-items:center;gap:7px;padding:8px 4px;
+  border-bottom:1px solid var(--rule);font-size:13px}
+.fold .fh .nm{flex:1;min-width:0;cursor:pointer;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fold .fh .n{font-size:11px;color:var(--ink-3)}
+.fold .fh .acts{display:flex;gap:2px;transition:opacity .15s}
+@media (hover:hover){
+  .fold .fh .acts{opacity:0}
+  .fold .fh:hover .acts{opacity:1}
+}
+.fold .fh .acts button{font-size:12.5px;color:var(--ink-3);line-height:1;
+  width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center}
+.fold .fh .acts button:hover{color:var(--accent);background:var(--accent-soft)}
+.fold .fh .acts button.rm:hover{color:var(--warn);background:transparent}
+.fold .in{padding-left:15px;border-left:1px solid var(--rule);margin-left:6px}
+.fold.sub .fh{font-size:12.5px}
+.caret{width:12px;font-size:9px;color:var(--ink-3);flex-shrink:0}
+
+/* 로그 행 */
+.log{display:flex;align-items:center;gap:9px;padding:10px 4px;
+  border-bottom:1px solid var(--rule)}
+.log:hover{background:var(--accent-soft)}
+.log .t{flex:1;min-width:0;cursor:pointer}
+.log .t b{font-family:var(--serif);font-size:14px;font-weight:400;display:block;
+  margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log .t span{font-size:11px;color:var(--ink-3)}
+.log .kd{font-size:10px;padding:1px 7px;border-radius:14px;
+  border:1px solid var(--rule);color:var(--ink-3);white-space:nowrap}
+.log .ed{font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:14px;padding:2px 9px;transition:opacity .15s}
+@media (hover:hover){
+  .log .ed{opacity:0}
+  .log:hover .ed{opacity:1}
+}
+.log .ed:hover{color:var(--accent)}
+.empty{font-size:12.5px;color:var(--ink-3);padding:16px 4px}
+.selbar{display:flex;align-items:center;gap:11px;padding:10px 12px;margin:6px 0 10px;
+  background:var(--accent-soft);border-radius:10px;font-size:12px;color:var(--ink-2)}
+.selbar .all{display:flex;align-items:center;gap:6px;cursor:pointer}
+.selbar input{width:15px;height:15px;accent-color:var(--accent);margin:0}
+.selbar #selcnt{flex:1;color:var(--ink-3);font-size:11.5px}
+.selbar button{font-size:11.5px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:14px;padding:3px 10px;background:var(--paper)}
+.selbar button:hover{border-color:var(--accent);color:var(--accent)}
+.log .ck{width:16px;height:16px;accent-color:var(--accent);margin:0;flex-shrink:0;display:none}
+body.selmode .log .ck{display:block}
+body.selmode .log .ed{display:none}
+body.selmode .fold .fh .acts{display:none}
+.grp-h{font-size:11px;color:var(--ink-3);margin:22px 0 2px;letter-spacing:.05em}
+
+/* 시트 */
+#scrim{position:fixed;inset:0;background:#0006;z-index:19;opacity:0;
+  pointer-events:none;transition:opacity .24s}
+#scrim.on{opacity:1;pointer-events:auto}
+#sheet{position:fixed;inset:auto 0 0 0;background:var(--paper-2);z-index:20;
+  border-top:1px solid var(--rule);border-radius:14px 14px 0 0;
+  padding:20px 20px calc(24px + env(safe-area-inset-bottom));
+  transform:translateY(101%);transition:transform .24s;max-height:86dvh;overflow:auto}
+#sheet.on{transform:none}
+#sheet .inner{max-width:var(--w);margin:0 auto}
+#sheet h3{font-family:var(--serif);font-size:15px;font-weight:400;margin-bottom:16px}
+#sheet label{display:block;font-size:11.5px;color:var(--ink-3);margin:0 0 5px}
+#sheet input,#sheet select,#sheet textarea{width:100%;padding:9px 12px;margin-bottom:13px;
+  background:var(--paper);border:1px solid var(--rule);border-radius:8px;
+  color:var(--ink);outline:none;font-size:13.5px}
+#sheet textarea{min-height:74px;resize:vertical;line-height:1.6}
+#sheet input:focus,#sheet select:focus,#sheet textarea:focus{border-color:var(--accent)}
+#sheet .row{display:flex;gap:9px;margin-top:6px}
+#sheet .row button{flex:1;padding:11px;border-radius:8px;font-size:13.5px;font-weight:500}
+#sheet .ok{background:var(--ink);color:var(--paper)}
+#sheet .no{border:1px solid var(--rule);color:var(--ink-2)}
+#sheet .del{color:var(--warn);font-size:12px;margin-top:14px;display:block;text-align:center;width:100%}
+</style>
+</head>
+<body>
+
+<div id="login" class="hide">
+  <div class="box">
+    <h1>캐릭터</h1>
+    <input id="em" type="email" placeholder="이메일" autocomplete="username">
+    <input id="pw" type="password" placeholder="비밀번호" autocomplete="current-password">
+    <button id="go">로그인</button>
+    <div class="err" id="lerr"></div>
+  </div>
+</div>
+
+<main id="app" class="hide">
+  <div class="head">
+    <h1><button id="back" style="color:var(--ink-3);font-size:14px;margin-right:7px">←</button><span id="ttl">캐릭터</span></h1>
+    <div class="r" id="hact"></div>
+  </div>
+  <div id="view"></div>
+</main>
+
+<div id="scrim"></div>
+<div id="sheet"><div class="inner" id="sheetIn"></div></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { CFG } from './config.js';
+import { loadStyles, applyTheme } from './theme.js';
+
+const sb = createClient(CFG.url, CFG.key);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const avatar = (v, fallback) => {
+  const t = String(v ?? '').trim();
+  if (!t) return esc(fallback);
+  return /^https?:\/\//i.test(t) ? `<img src="${esc(t)}" alt="">` : esc(t);
+};
+applyTheme(localStorage.getItem('theme') || 'day');
+loadStyles(sb).then(() => applyTheme(localStorage.getItem('theme') || 'day'));
+
+const DEFAULT_KINDS = [
+  { value: 'origin', label: '원본 채팅방' },
+  { value: 'good', label: '느좋 로그' },
+  { value: 'ooc', label: 'OOC' },
+];
+let KINDS = [...DEFAULT_KINDS];
+let KIND_LABEL = Object.fromEntries(KINDS.map(k => [k.value, k.label]));
+async function loadKinds() {
+  const { data, error } = await sb.from('kinds').select('value,label').order('sort');
+  if (!error && data?.length) KINDS = data;
+  KIND_LABEL = Object.fromEntries(KINDS.map(k => [k.value, k.label]));
+}
+const KIND = new Proxy({}, { get: (_, k) => KIND_LABEL[k] });
+
+$('go').onclick = async () => {
+  $('lerr').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email: $('em').value.trim(), password: $('pw').value });
+  if (error) return $('lerr').textContent = '이메일이나 비밀번호를 다시 확인해줘';
+  route();
+};
+$('pw').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) route();
+  else $('login').classList.remove('hide');
+});
+
+$('back').onclick = () => {
+  if (new URLSearchParams(location.search).get('c')) location.search = '';
+  else location.href = './index.html';
+};
+
+const openSheet = html => { $('sheetIn').innerHTML = html; $('sheet').classList.add('on'); $('scrim').classList.add('on'); };
+const shut = () => { $('sheet').classList.remove('on'); $('scrim').classList.remove('on'); };
+$('scrim').onclick = shut;
+
+async function route() {
+  await loadKinds();
+  $('login').classList.add('hide');
+  $('app').classList.remove('hide');
+  const id = new URLSearchParams(location.search).get('c');
+  id ? detail(id) : list();
+}
+
+// ─────────── 목록
+async function list() {
+  $('ttl').textContent = '캐릭터';
+  $('hact').innerHTML = '<button id="add">＋ 새 캐릭터</button>';
+  $('add').onclick = newChar;
+
+  const [{ data: chars }, { data: cast }] = await Promise.all([
+    sb.from('characters').select('id,name,avatar_url').order('name'),
+    sb.from('log_cast').select('character_id'),
+  ]);
+  const cnt = {};
+  (cast || []).forEach(c => cnt[c.character_id] = (cnt[c.character_id] || 0) + 1);
+
+  $('view').innerHTML = chars?.length
+    ? `<div class="faces">${chars.map(c => `
+        <a class="face" href="?c=${c.id}">
+          <div class="av">${avatar(c.avatar_url, c.name.slice(0,1))}</div>
+          <b>${esc(c.name)}</b><span>${cnt[c.id] || 0}권</span>
+        </a>`).join('')}</div>`
+    : '<div class="empty">아직 캐릭터가 없어. 로그를 들이면 자동으로 생겨.</div>';
+}
+
+async function newChar() {
+  const name = prompt('캐릭터 이름');
+  if (!name?.trim()) return;
+  const { data, error } = await sb.from('characters').insert({ name: name.trim() }).select('id').single();
+  if (error) return alert(error.message);
+  location.search = '?c=' + data.id;
+}
+
+// ─────────── 상세
+let C = null, folders = [], logs = [];
+
+async function detail(id) {
+  const [{ data: c }, { data: f }, { data: lc }] = await Promise.all([
+    sb.from('characters').select('*').eq('id', id).maybeSingle(),
+    sb.from('folders').select('*').eq('character_id', id).order('sort').order('created_at'),
+    sb.from('log_cast').select('logs(id,title,kind,folder_id,message_count,scene_from,created_at,deleted_at)').eq('character_id', id),
+  ]);
+  if (!c) { $('view').innerHTML = '<div class="empty">없는 캐릭터야</div>'; return; }
+
+  C = c; folders = f || [];
+  logs = (lc || []).map(x => x.logs).filter(x => x && !x.deleted_at)
+    .sort((a, b) => (b.scene_from || b.created_at || '').localeCompare(a.scene_from || a.created_at || ''));
+
+  $('ttl').textContent = c.name;
+  $('hact').innerHTML = '<button id="selbtn">선택</button><button id="cedit">설정</button>';
+  $('cedit').onclick = editChar;
+  $('selbtn').onclick = () => setSelMode(!selMode);
+
+  paint();
+}
+
+function paint() {
+  const roots = folders.filter(f => !f.parent_id);
+  const loose = logs.filter(l => !l.folder_id || !folders.some(f => f.id === l.folder_id));
+
+  $('view').innerHTML = `
+    <div class="prof">
+      <div class="av">${avatar(C.avatar_url, C.name.slice(0,1))}</div>
+      <div class="b">
+        <h2>${esc(C.name)}</h2>
+        ${C.summary ? `<p>${esc(C.summary)}</p>` : ''}
+        ${C.tags?.length ? `<div class="tags">${C.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>` : ''}
+      </div>
+    </div>
+
+    <div class="selbar hide" id="selbar">
+      <label class="all"><input type="checkbox" id="ckall"> 전체</label>
+      <span id="selcnt">0권 선택</span>
+      <button id="selfold">폴더로</button>
+      <button id="selx">취소</button>
+    </div>
+
+    <div class="bar">
+      <button id="nf">＋ 폴더</button>
+      <span style="font-size:11.5px;color:var(--ink-3);align-self:center">로그 ${logs.length}권</span>
+    </div>
+
+    ${roots.map(f => foldHtml(f, 0)).join('')}
+
+    ${loose.length
+      ? (roots.length ? `<div class="grp-h">폴더 없음</div>` : '') + loose.map(logHtml).join('')
+      : (roots.length ? '' : '<div class="empty">아직 로그가 없어</div>')}
+  `;
+
+  $('nf').onclick = () => newFolder(null);
+  bind();
+}
+
+function foldHtml(f, depth) {
+  const kids = folders.filter(x => x.parent_id === f.id);
+  const mine = logs.filter(l => l.folder_id === f.id);
+  const open = localStorage.getItem('fo:' + f.id) !== '0';
+  return `<div class="fold${depth ? ' sub' : ''}">
+    <div class="fh">
+      <span class="caret" data-fo="${f.id}">${open ? '▾' : '▸'}</span>
+      <span class="nm" data-fo="${f.id}">${open ? '📂' : '📁'} ${esc(f.name)}</span>
+      <span class="n">${mine.length}</span>
+      <span class="acts">
+        ${depth === 0 ? `<button data-nsub="${f.id}" title="하위 폴더">＋</button>` : ''}
+        <button data-fren="${f.id}" title="이름 바꾸기">✎</button>
+        <button data-fdel="${f.id}" title="폴더 삭제" class="rm">🗑</button>
+      </span>
+    </div>
+    ${open ? `<div class="in">
+      ${kids.map(k => foldHtml(k, depth + 1)).join('')}
+      ${mine.length ? mine.map(logHtml).join('') : (kids.length ? '' : '<div class="empty">비어 있어</div>')}
+    </div>` : ''}
+  </div>`;
+}
+
+function logHtml(l) {
+  const d = (l.scene_from || l.created_at || '').slice(0, 10).replace(/-/g, '.');
+  return `<div class="log">
+    <input type="checkbox" class="ck" data-ck="${l.id}">
+    <div class="t" data-open="${l.id}">
+      <b>${esc(l.title || '제목 없음')}</b>
+      <span>${d} · ${l.message_count || 0}편</span>
+    </div>
+    <span class="kd">${KIND[l.kind] || l.kind || '원본 채팅방'}</span>
+    <button class="ed" data-led="${l.id}">설정</button>
+  </div>`;
+}
+
+// ── 여러 개 골라 폴더 옮기기 ──────────────────────────
+let selMode = false;
+
+function syncSel() {
+  const cks = [...document.querySelectorAll('.log .ck')];
+  const n = cks.filter(c => c.checked).length;
+  if ($('selcnt')) $('selcnt').textContent = `${n}권 선택`;
+  if ($('selfold')) {
+    $('selfold').disabled = n === 0;
+    $('selfold').style.opacity = n === 0 ? '.4' : '1';
+  }
+  if ($('ckall')) $('ckall').checked = n > 0 && n === cks.length;
+}
+
+function setSelMode(on) {
+  selMode = on;
+  document.body.classList.toggle('selmode', on);
+  if ($('selbar')) $('selbar').classList.toggle('hide', !on);
+  if ($('selbtn')) $('selbtn').textContent = on ? '끝내기' : '선택';
+  if (!on) document.querySelectorAll('.log .ck').forEach(c => c.checked = false);
+  else syncSel();
+}
+
+function bindSel() {
+  if (!$('selbar')) return;
+  $('selx').onclick = () => setSelMode(false);
+  $('ckall').onclick = e => {
+    document.querySelectorAll('.log .ck').forEach(c => c.checked = e.target.checked);
+    syncSel();
+  };
+  document.querySelectorAll('.log .ck').forEach(c => c.onclick = e => { e.stopPropagation(); syncSel(); });
+  $('selfold').onclick = () => {
+    const ids = [...document.querySelectorAll('.log .ck')].filter(c => c.checked).map(c => c.dataset.ck);
+    if (!ids.length) return;
+    openSheet(`
+      <h3>폴더로 옮기기</h3>
+      <label>고른 ${ids.length}권을 넣을 폴더</label>
+      <select id="mv-f">${folderOpts(null)}</select>
+      <div class="row">
+        <button class="no" id="mv-x">닫기</button>
+        <button class="ok" id="mv-s">옮기기</button>
+      </div>
+    `);
+    $('mv-x').onclick = shut;
+    $('mv-s').onclick = async () => {
+      const { error } = await sb.from('logs')
+        .update({ folder_id: $('mv-f').value || null }).in('id', ids);
+      if (error) return alert(error.message);
+      shut(); setSelMode(false); detail(C.id);
+    };
+  };
+  if (selMode) { document.body.classList.add('selmode'); $('selbar').classList.remove('hide'); syncSel(); }
+}
+
+function bind() {
+  bindSel();
+  const on = (sel, fn) => document.querySelectorAll(sel).forEach(el => el.onclick = () => fn(el.dataset));
+
+  on('[data-fo]', d => {
+    const k = 'fo:' + d.fo;
+    localStorage.setItem(k, localStorage.getItem(k) === '0' ? '1' : '0');
+    paint();
+  });
+  on('[data-nsub]', d => newFolder(d.nsub));
+  on('[data-fren]', async d => {
+    const f = folders.find(x => x.id === d.fren);
+    const n = prompt('폴더 이름', f.name);
+    if (!n?.trim()) return;
+    await sb.from('folders').update({ name: n.trim() }).eq('id', f.id);
+    detail(C.id);
+  });
+  on('[data-fdel]', async d => {
+    const f = folders.find(x => x.id === d.fdel);
+    if (!confirm(`'${f.name}' 폴더를 지울까? 안의 로그는 안 지워지고 폴더 밖으로 나와.`)) return;
+    await sb.from('folders').delete().eq('id', f.id);
+    detail(C.id);
+  });
+  document.querySelectorAll('[data-open]').forEach(el => el.onclick = () => {
+    if (selMode) {
+      const ck = el.parentElement.querySelector('.ck');
+      if (ck) { ck.checked = !ck.checked; syncSel(); }
+      return;
+    }
+    location.href = `./shelf.html?log=${el.dataset.open}`;
+  });
+  on('[data-led]', d => editLog(logs.find(l => l.id === d.led)));
+}
+
+async function newFolder(parent) {
+  const name = prompt(parent ? '하위 폴더 이름' : '폴더 이름');
+  if (!name?.trim()) return;
+  const { error } = await sb.from('folders')
+    .insert({ name: name.trim(), parent_id: parent, character_id: C.id });
+  if (error) return alert(error.message);
+  detail(C.id);
+}
+
+// ─────────── 편집 시트
+function folderOpts(sel) {
+  const roots = folders.filter(f => !f.parent_id);
+  let h = `<option value=""${!sel ? ' selected' : ''}>— 폴더 없음 —</option>`;
+  for (const r of roots) {
+    h += `<option value="${r.id}"${sel === r.id ? ' selected' : ''}>${esc(r.name)}</option>`;
+    for (const k of folders.filter(f => f.parent_id === r.id))
+      h += `<option value="${k.id}"${sel === k.id ? ' selected' : ''}>　└ ${esc(k.name)}</option>`;
+  }
+  return h;
+}
+
+function editLog(l) {
+  if (!l) return;
+  openSheet(`
+    <h3>로그 고치기</h3>
+    <label>제목</label><input id="e-t" value="${esc(l.title || '')}">
+    <label>태그</label><select id="e-k">${KINDS.map(k =>
+      `<option value="${k.value}"${(l.kind||'origin')===k.value?' selected':''}>${esc(k.label)}</option>`).join('')}</select>
+    <label>폴더</label><select id="e-f">${folderOpts(l.folder_id)}</select>
+    <div class="row">
+      <button class="no" id="e-x">닫기</button>
+      <button class="ok" id="e-s">저장</button>
+    </div>
+    <button class="del" id="e-unlink">이 캐릭터에서 떼기</button>
+    <button class="del" id="e-del">휴지통으로 보내기</button>
+  `);
+  $('e-x').onclick = shut;
+  $('e-s').onclick = async () => {
+    const { error } = await sb.from('logs').update({
+      title: $('e-t').value.trim() || null,
+      kind: $('e-k').value,
+      folder_id: $('e-f').value || null,
+    }).eq('id', l.id);
+    if (error) return alert(error.message);
+    shut(); detail(C.id);
+  };
+  $('e-unlink').onclick = async () => {
+    if (!confirm('이 캐릭터 목록에서만 빼. 로그 자체는 도서관에 남아.')) return;
+    await sb.from('log_cast').delete().eq('log_id', l.id).eq('character_id', C.id);
+    shut(); detail(C.id);
+  };
+  $('e-del').onclick = async () => {
+    if (!confirm(`'${l.title}' 을(를) 휴지통으로 보낼까?\n3일 뒤 자동으로 지워지고, 그 전엔 설정에서 되살릴 수 있어.`)) return;
+    const { error } = await sb.from('logs')
+      .update({ deleted_at: new Date().toISOString() }).eq('id', l.id);
+    if (error) return alert(error.message);
+    shut(); detail(C.id);
+  };
+}
+
+function editChar() {
+  openSheet(`
+    <h3>캐릭터 고치기</h3>
+    <label>이름</label><input id="c-n" value="${esc(C.name)}">
+    <label>소개</label><textarea id="c-s">${esc(C.summary || '')}</textarea>
+    <label>태그 (쉼표로 구분)</label><input id="c-t" value="${esc((C.tags || []).join(', '))}">
+    <label>아바타</label><input id="c-a" value="${esc(C.avatar_url || '')}" placeholder="🌙 또는 https://...">
+    <div style="display:flex;align-items:center;gap:10px;margin:-6px 0 14px">
+      <div id="c-pv" style="width:44px;height:44px;border-radius:12px;background:var(--accent-soft);
+        border:1px solid var(--rule);display:grid;place-items:center;font-size:21px;
+        overflow:hidden;line-height:1;font-family:var(--serif)">${avatar(C.avatar_url, C.name.slice(0,1))}</div>
+      <span style="font-size:11px;color:var(--ink-3)">이모지를 붙여넣거나 이미지 주소를 넣어도 돼</span>
+    </div>
+    <div class="row">
+      <button class="no" id="c-x">닫기</button>
+      <button class="ok" id="c-s2">저장</button>
+    </div>
+    <button class="del" id="c-del">캐릭터 삭제</button>
+  `);
+  $('c-a').oninput = () => { $('c-pv').innerHTML = avatar($('c-a').value, $('c-n').value.slice(0,1)); };
+  $('c-x').onclick = shut;
+  $('c-s2').onclick = async () => {
+    const { error } = await sb.from('characters').update({
+      name: $('c-n').value.trim() || C.name,
+      summary: $('c-s').value.trim() || null,
+      tags: $('c-t').value.split(',').map(s => s.trim()).filter(Boolean),
+      avatar_url: $('c-a').value.trim() || null,
+    }).eq('id', C.id);
+    if (error) return alert(error.message);
+    shut(); detail(C.id);
+  };
+  $('c-del').onclick = async () => {
+    if (!confirm(`'${C.name}' 을(를) 지울까? 로그는 안 지워지고 연결만 끊겨.`)) return;
+    await sb.from('characters').delete().eq('id', C.id);
+    location.search = '';
+  };
+}
+
+</script>
+</body>
+</html>

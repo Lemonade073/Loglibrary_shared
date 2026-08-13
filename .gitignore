@@ -1,0 +1,14 @@
+# 내 Supabase 주소와 키가 들어가는 파일 — 절대 커밋하지 말 것
+config.js
+
+# 백업 파일
+log-library-*.json
+
+# OS / 편집기 / 도구
+.DS_Store
+Thumbs.db
+.vscode/
+.claude/
+node_modules/
+.vercel/
+.netlify/

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>로그 추가하기</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="도서관">
+<meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16171A" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F7F5F0; --paper-2:#FFFFFF; --ink:#22201C; --ink-2:#6B665C;
+  --ink-3:#9C968A; --rule:#E2DED4; --accent:#5B6B58; --accent-soft:#EDF0EA;
+  --warn:#B4544A; --w:min(680px,100%);
+}
+[data-theme="white"]{--paper:#FFF;--paper-2:#FFF;--ink:#1A1A1A;--ink-2:#5C5C5C;
+  --ink-3:#9A9A9A;--rule:#EAEAEA;--accent:#4A5A47;--accent-soft:#F2F4F1;--warn:#B4544A}
+[data-theme="night"]{
+  --paper:#16171A; --paper-2:#1D1F23; --ink:#DBD8D1; --ink-2:#948F86;
+  --ink-3:#6A665F; --rule:#2C2F34; --accent:#8FA88A; --accent-soft:#232821;
+}
+[data-theme="sepia"]{
+  --paper:#EFE6D6; --paper-2:#F7F0E3; --ink:#3A3227; --ink-2:#7A6E5C;
+  --ink-3:#A0937D; --rule:#DDD1BC; --accent:#8A6A3E; --accent-soft:#E7DCC6;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:'IBM Plex Sans KR',system-ui,sans-serif;font-weight:300}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input{font:inherit}
+.hide{display:none!important}
+main{max-width:var(--w);margin:0 auto;padding:30px 20px 80px}
+
+.head{display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:14px;border-bottom:1px solid var(--rule);margin-bottom:22px}
+.head h1{font-family:'Gowun Batang',serif;font-size:21px;font-weight:400}
+.head a{font-size:12px;color:var(--ink-3);text-decoration:none}
+.head a:hover{color:var(--accent)}
+
+#login{min-height:70dvh;display:flex;align-items:center;justify-content:center}
+#login .box{width:min(320px,100%)}
+#login input{width:100%;padding:11px 13px;margin-bottom:9px;background:var(--paper-2);
+  border:1px solid var(--rule);border-radius:7px;color:var(--ink);outline:none}
+#login input:focus{border-color:var(--accent)}
+#login button{width:100%;padding:11px;background:var(--ink);color:var(--paper);
+  border-radius:7px;font-weight:500;font-size:14px;margin-top:6px}
+.err{font-size:12px;color:var(--warn);margin-top:10px;min-height:16px}
+
+#drop{border:1.5px dashed var(--rule);border-radius:11px;padding:38px 20px;
+  text-align:center;cursor:pointer;transition:border-color .18s,background .18s}
+#drop:hover,#drop.over{border-color:var(--accent);background:var(--accent-soft)}
+#drop b{display:block;font-family:'Gowun Batang',serif;font-size:16px;font-weight:400;margin-bottom:6px}
+#drop span{font-size:12px;color:var(--ink-3)}
+
+.item{border-bottom:1px solid var(--rule);padding:15px 2px;font-size:13px}
+.item .t{font-family:'Gowun Batang',serif;font-size:15.5px;margin-bottom:5px;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.item .m{font-size:12px;color:var(--ink-3);display:flex;gap:9px;flex-wrap:wrap}
+.item .cast{color:var(--accent)}
+.tag{font-size:11px;padding:1px 7px;border-radius:20px;background:var(--accent-soft);color:var(--accent)}
+.tag.skip{background:transparent;border:1px solid var(--rule);color:var(--ink-3)}
+.tag.bad{background:transparent;border:1px solid var(--warn);color:var(--warn)}
+.item.done{opacity:.5}
+.item .kind{margin-left:auto;appearance:none;-webkit-appearance:none;
+  padding:3px 22px 3px 9px;border:1px solid var(--rule);border-radius:16px;
+  background:var(--paper);color:var(--ink-2);font-size:11px;font-family:inherit;
+  outline:none;cursor:pointer;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink-3) 50%),
+    linear-gradient(135deg,var(--ink-3) 50%,transparent 50%);
+  background-position:calc(100% - 12px) 52%,calc(100% - 8px) 52%;
+  background-size:4px 4px,4px 4px;background-repeat:no-repeat}
+.item .kind:focus{border-color:var(--accent)}
+
+.act{display:flex;align-items:center;gap:12px;margin-top:22px}
+.act button{padding:11px 20px;border-radius:7px;font-size:14px;font-weight:500}
+#save{background:var(--ink);color:var(--paper);flex:1}
+#save:disabled{opacity:.3}
+#clear{border:1px solid var(--rule);color:var(--ink-2)}
+.note{font-size:12px;color:var(--ink-3);margin:16px 0 8px}
+</style>
+</head>
+<body>
+<main>
+  <div class="head">
+    <h1>로그 추가하기</h1>
+    <a href="./index.html">← 뒤로 가기</a>
+  </div>
+
+  <div id="login" class="hide">
+    <div class="box">
+      <input id="em" type="email" placeholder="이메일" autocomplete="username">
+      <input id="pw" type="password" placeholder="비밀번호" autocomplete="current-password">
+      <button id="go">로그인</button>
+      <div class="err" id="lerr"></div>
+    </div>
+  </div>
+
+  <div id="app" class="hide">
+    <div id="drop">
+      <b>JSON · HTML · TXT 파일을 여기로</b>
+      <span>여러 개 한꺼번에 놓아도 돼</span>
+    </div>
+    <input id="file" type="file" accept=".json,.html,.htm,.txt,application/json,text/html,text/plain" multiple class="hide">
+    <div id="list"></div>
+    <div class="act hide" id="act">
+      <button id="save">추가하기</button>
+      <button id="clear">비우기</button>
+    </div>
+    <div class="err" id="serr"></div>
+  </div>
+</main>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { CFG } from './config.js';
+import { loadStyles, applyTheme } from './theme.js';
+import { parseFile, saveToSupabase, setParsers } from './parse.js';
+
+const sb = createClient(CFG.url, CFG.key);
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+applyTheme(localStorage.getItem('theme') || 'day');
+loadStyles(sb).then(() => applyTheme(localStorage.getItem('theme') || 'day'));
+
+const DEFAULT_KINDS = [
+  { value: 'origin', label: '원본 채팅방' },
+  { value: 'good', label: '느좋 로그' },
+  { value: 'ooc', label: 'OOC' },
+];
+let KINDS = [...DEFAULT_KINDS];
+let KIND_LABEL = Object.fromEntries(KINDS.map(k => [k.value, k.label]));
+async function loadKinds() {
+  const { data, error } = await sb.from('kinds').select('value,label').order('sort');
+  if (!error && data?.length) KINDS = data;
+  KIND_LABEL = Object.fromEntries(KINDS.map(k => [k.value, k.label]));
+}
+
+let queue = [];
+
+$('go').onclick = async () => {
+  $('lerr').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email: $('em').value.trim(), password: $('pw').value });
+  if (error) return $('lerr').textContent = '이메일이나 비밀번호를 다시 확인해줘';
+  ready();
+};
+$('pw').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) ready();
+  else $('login').classList.remove('hide');
+});
+
+async function ready() {
+  const { data } = await sb.from('parsers').select('*').order('sort');
+  setParsers(data || []);
+  await loadKinds();
+  $('login').classList.add('hide');
+  $('app').classList.remove('hide');
+}
+
+// ── 파일 받기
+$('drop').onclick = () => $('file').click();
+$('file').onchange = e => { take([...e.target.files]); e.target.value = ''; };
+['dragenter','dragover'].forEach(t => $('drop').addEventListener(t, e => {
+  e.preventDefault(); $('drop').classList.add('over');
+}));
+['dragleave','drop'].forEach(t => $('drop').addEventListener(t, e => {
+  e.preventDefault(); $('drop').classList.remove('over');
+}));
+$('drop').addEventListener('drop', e => take([...e.dataTransfer.files]));
+
+async function take(files) {
+  for (const f of files) {
+    if (!/\.(json|html?|txt)$/i.test(f.name)) continue;
+    const entry = { name: f.name, state: 'ok' };
+    try {
+      entry.parsed = await parseFile(f);
+      const { data } = await sb.from('logs').select('id')
+        .eq('source_id', entry.parsed.log.source_id).maybeSingle();
+      if (data) entry.state = 'dup';
+    } catch (err) {
+      entry.state = 'bad';
+      entry.msg = err.message;
+    }
+    queue.push(entry);
+  }
+  paint();
+}
+
+function paint() {
+  $('act').classList.toggle('hide', !queue.length);
+  $('save').disabled = !queue.some(q => q.state === 'ok');
+  $('list').innerHTML = queue.map((q, i) => {
+    if (q.state === 'bad') return `<div class="item">
+      <div class="t">${esc(q.name)} <span class="tag bad">읽을 수 없음</span></div>
+      <div class="m">${esc(q.msg)}</div></div>`;
+    const l = q.parsed.log;
+    const parsed = q.parsed.messages.filter(m => m.meta_format).length;
+    const span = l.scene_from
+      ? `${l.scene_from.slice(0,10).replace(/-/g,'.')} – ${(l.scene_to||'').slice(5,10).replace('-','.')}`
+      : '인게임 날짜 없음';
+    const editable = q.state === 'ok';
+    const kindSel = `<select class="kind" data-i="${i}"${editable ? '' : ' disabled'}>` +
+      KINDS.map(k => `<option value="${k.value}"${l.kind === k.value ? ' selected' : ''}>${esc(k.label)}</option>`).join('') +
+      `</select>`;
+    const tag = q.state === 'dup' ? '<span class="tag skip">이미 있음</span>'
+      : q.state === 'saved' ? '<span class="tag">들임</span>'
+      : q.state === 'saving' ? `<span class="tag">${q.prog || '…'}</span>` : '';
+    return `<div class="item${q.state === 'saved' || q.state === 'dup' ? ' done' : ''}" data-i="${i}">
+      <div class="t">${esc(l.title || '제목 없음')} ${tag}${kindSel}</div>
+      <div class="m">
+        <span class="cast">${esc(l.cast.join(' · ') || '캐릭터 미확인')}</span>
+        <span>${span}</span>
+        <span>${l.message_count}편 · 상태창 ${parsed}</span>
+        ${l.hypa.length ? `<span>하이파 ${l.hypa.length}</span>` : ''}
+      </div></div>`;
+  }).join('');
+}
+
+$('list').addEventListener('change', e => {
+  const sel = e.target.closest('.kind');
+  if (!sel) return;
+  queue[+sel.dataset.i].parsed.log.kind = sel.value;
+});
+
+$('clear').onclick = () => { queue = []; $('serr').textContent = ''; paint(); };
+
+$('save').onclick = async () => {
+  $('save').disabled = true;
+  $('serr').textContent = '';
+  for (const q of queue) {
+    if (q.state !== 'ok') continue;
+    q.state = 'saving'; paint();
+    try {
+      const r = await saveToSupabase(sb, q.parsed, (done, all) => {
+        q.prog = `${done}/${all}`; paint();
+      });
+      q.state = r.skipped ? 'dup' : 'saved';
+    } catch (err) {
+      q.state = 'bad'; q.msg = err.message;
+    }
+    paint();
+  }
+  const n = queue.filter(q => q.state === 'saved').length;
+  $('serr').style.color = 'var(--accent)';
+  $('serr').textContent = n ? `${n}권 들였어. 도서관에서 볼 수 있어.` : '새로 들인 건 없어.';
+  paint();
+};
+</script>
+</body>
+</html>

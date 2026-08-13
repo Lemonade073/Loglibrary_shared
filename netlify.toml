@@ -1,0 +1,8 @@
+[build]
+  command = "node build.js"
+  publish = "."
+
+# 배포 버튼을 눌렀을 때 입력받을 값
+[template.environment]
+  SUPABASE_URL = "Supabase 프로젝트 URL — https://xxxxxxxx.supabase.co (끝에 / 없이)"
+  SUPABASE_ANON_KEY = "Supabase anon public 키 (service_role 키가 아닙니다)"

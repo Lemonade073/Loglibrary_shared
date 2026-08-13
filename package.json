@@ -1,0 +1,10 @@
+{
+  "name": "log-library",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RisuAI 채팅 로그를 모아두고 이북 리더처럼 읽는 개인용 웹사이트",
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js && npx serve"
+  }
+}

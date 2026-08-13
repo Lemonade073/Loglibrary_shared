@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>설정</title>
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16171A" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400&family=IBM+Plex+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'RIDIBatang';
+  src:url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_twelve@1.0/RIDIBatang.woff') format('woff');
+  font-weight:normal;font-style:normal;font-display:swap}
+:root{
+  --paper:#F7F5F0;--paper-2:#FFFFFF;--ink:#22201C;--ink-2:#6B665C;
+  --ink-3:#9C968A;--rule:#E2DED4;--accent:#5B6B58;--accent-soft:#EDF0EA;
+  --warn:#B4544A;--w:min(560px,100%);--serif:'RIDIBatang','Gowun Batang',serif;
+}
+[data-theme="white"]{--paper:#FFF;--paper-2:#FFF;--ink:#1A1A1A;--ink-2:#5C5C5C;
+  --ink-3:#9A9A9A;--rule:#EAEAEA;--accent:#4A5A47;--accent-soft:#F2F4F1}
+[data-theme="night"]{--paper:#16171A;--paper-2:#1D1F23;--ink:#DBD8D1;--ink-2:#948F86;
+  --ink-3:#6A665F;--rule:#2C2F34;--accent:#8FA88A;--accent-soft:#232821}
+[data-theme="sepia"]{--paper:#EFE6D6;--paper-2:#F7F0E3;--ink:#3A3227;--ink-2:#7A6E5C;
+  --ink-3:#A0937D;--rule:#DDD1BC;--accent:#8A6A3E;--accent-soft:#E7DCC6}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:'IBM Plex Sans KR',system-ui,sans-serif;font-weight:300;
+  padding-bottom:env(safe-area-inset-bottom)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select{font:inherit}
+.hide{display:none!important}
+main{max-width:var(--w);margin:0 auto;padding:32px 22px 70px}
+
+#login{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
+#login .box{width:min(330px,100%)}
+#login h1{font-family:var(--serif);font-size:24px;font-weight:400;margin-bottom:18px}
+#login input{width:100%;padding:11px 13px;margin-bottom:9px;background:var(--paper-2);
+  border:1px solid var(--rule);border-radius:7px;color:var(--ink);outline:none}
+#login button{width:100%;padding:11px;background:var(--ink);color:var(--paper);
+  border-radius:7px;font-weight:500;font-size:14px;margin-top:6px}
+.err{font-size:12px;color:var(--warn);margin-top:10px;min-height:16px}
+
+.head{display:flex;align-items:baseline;justify-content:space-between;
+  padding-bottom:13px;border-bottom:1px solid var(--rule);margin-bottom:26px}
+.head h1{font-family:var(--serif);font-size:21px;font-weight:400}
+.head h1 a{color:var(--ink-3);font-size:14px;margin-right:7px}
+
+.lab{font-size:11.5px;color:var(--ink-2);letter-spacing:.06em;margin:0}
+details.sec{border-bottom:1px solid var(--rule);margin:0}
+details.sec:first-of-type{border-top:1px solid var(--rule)}
+details.sec>summary{list-style:none;cursor:pointer;padding:16px 3px;
+  display:flex;align-items:center;gap:10px}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary:hover .lab{color:var(--accent)}
+details.sec .cv{margin-left:auto;font-size:11px;color:var(--ink-3);
+  transition:transform .2s;display:inline-block}
+details.sec[open] .cv{transform:rotate(180deg)}
+details.sec[open]>summary .lab{color:var(--accent)}
+details.sec>.body{padding:2px 0 24px}
+
+.box{background:var(--paper-2);border:1px solid var(--rule);border-radius:12px;padding:17px 18px}
+.box p{font-size:11.5px;color:var(--ink-3);line-height:1.75}
+
+/* 테마 */
+.themes{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.themes .add{border:1px dashed var(--rule);border-radius:11px;color:var(--ink-3);
+  font-size:11px;line-height:1.5;display:grid;place-items:center;min-height:80px}
+.themes .add:hover{border-color:var(--accent);color:var(--accent)}
+.th .ed{font-size:10px;color:var(--ink-3);margin-top:3px;display:block}
+.th .ed:hover{color:var(--accent)}
+.fz{display:flex;align-items:center;gap:9px;padding:10px 2px;border-bottom:1px solid var(--rule)}
+.fz:last-child{border-bottom:none}
+.fz .b{flex:1;min-width:0}
+.fz .t{font-size:14px;margin-bottom:2px}
+.fz .d{font-size:11px;color:var(--ink-3)}
+.fz button{font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:14px;padding:3px 10px}
+.fz button:hover{border-color:var(--accent);color:var(--accent)}
+.cgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 12px;margin-bottom:10px}
+.cgrid .c{display:flex;align-items:center;gap:8px}
+.cgrid .c label{margin:0;font-size:11px;flex:1}
+.cgrid .c input[type=color]{width:36px;height:28px;padding:2px;border-radius:7px;
+  border:1px solid var(--rule);background:var(--paper);cursor:pointer}
+#sheet .seed{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+#sheet .seed button{padding:6px 14px;border:1px solid var(--rule);border-radius:16px;
+  font-size:12px;font-family:var(--serif)}
+#sheet .seed button:hover{border-color:var(--accent)}
+#sheet textarea{width:100%;min-height:190px;padding:12px 13px;margin-bottom:6px;
+  background:var(--paper);border:1px solid var(--rule);border-radius:8px;color:var(--ink);
+  outline:none;font-size:12.5px;line-height:1.6;resize:vertical;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+#sheet textarea:focus{border-color:var(--accent)}
+#sheet .jrow{display:flex;align-items:center;gap:10px;margin-bottom:14px;min-height:20px}
+#sheet .jrow span{flex:1;font-size:11px;color:var(--ink-3)}
+#sheet .jrow span.bad{color:var(--warn)}
+#sheet .jrow button{font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:14px;padding:3px 12px;white-space:nowrap}
+#sheet .jrow button:hover{border-color:var(--accent);color:var(--accent)}
+#sheet details.pick{margin-bottom:14px}
+#sheet details.pick>summary{list-style:none;cursor:pointer;font-size:11.5px;
+  color:var(--ink-3);padding:6px 0;display:flex;align-items:center;gap:6px}
+#sheet details.pick>summary::-webkit-details-marker{display:none}
+#sheet details.pick>summary:hover{color:var(--accent)}
+#sheet details.pick .cv{transition:transform .2s;display:inline-block;font-size:10px}
+#sheet details.pick[open] .cv{transform:rotate(180deg)}
+#sheet details.pick .cgrid{padding-top:8px}
+#scrim2{position:fixed;inset:0;background:#0006;z-index:19;opacity:0;
+  pointer-events:none;transition:opacity .24s}
+#scrim2.on{opacity:1;pointer-events:auto}
+#sheet{position:fixed;inset:auto 0 0 0;background:var(--paper-2);z-index:20;
+  border-top:1px solid var(--rule);border-radius:14px 14px 0 0;
+  padding:20px 22px calc(26px + env(safe-area-inset-bottom));
+  transform:translateY(101%);transition:transform .24s;max-height:88dvh;overflow:auto}
+#sheet.on{transform:none}
+#sheet .in{max-width:var(--w);margin:0 auto}
+#sheet h3{font-family:var(--serif);font-size:15px;font-weight:400;margin-bottom:16px}
+#sheet label{display:block;font-size:11.5px;color:var(--ink-3);margin:0 0 5px}
+#sheet input:not([type=color]){width:100%;padding:9px 12px;margin-bottom:13px;
+  background:var(--paper);border:1px solid var(--rule);border-radius:8px;
+  color:var(--ink);outline:none;font-size:13.5px}
+#sheet input:focus{border-color:var(--accent)}
+#sheet .srow{display:flex;gap:9px;margin-top:8px}
+#sheet .srow button{flex:1;padding:11px;border-radius:8px;font-size:13.5px;font-weight:500}
+#sheet .ok{background:var(--ink);color:var(--paper)}
+#sheet .no{border:1px solid var(--rule);color:var(--ink-2)}
+#sheet .del{color:var(--warn);font-size:12px;margin-top:14px;display:block;
+  text-align:center;width:100%}
+.th{border:1px solid var(--rule);border-radius:11px;padding:11px 6px;text-align:center;
+  transition:border-color .15s}
+.th:hover{border-color:var(--accent)}
+.th.on{border-color:var(--accent);background:var(--accent-soft)}
+.th .sw{width:100%;height:34px;border-radius:7px;margin-bottom:8px;
+  border:1px solid rgba(0,0,0,.08);display:grid;place-items:center;
+  font-family:var(--serif);font-size:14px}
+.th b{font-size:11.5px;font-weight:400;display:block}
+.th.on b{color:var(--accent)}
+
+/* 백업 */
+.btn{width:100%;padding:12px;border-radius:9px;font-size:13.5px;font-weight:500;
+  background:var(--ink);color:var(--paper)}
+.btn:disabled{opacity:.4}
+.btn.sub{background:transparent;border:1px solid var(--rule);color:var(--ink-2);margin-top:9px}
+.btn.sub:hover{border-color:var(--accent);color:var(--accent)}
+.stat{font-size:11.5px;color:var(--ink-3);margin-top:11px;line-height:1.7;
+  white-space:pre-wrap;min-height:16px;text-align:center}
+.stat.ok{color:var(--accent)}
+.stat.err{color:var(--warn)}
+.rows{font-size:11.5px;color:var(--ink-3);margin-top:13px;
+  display:grid;grid-template-columns:1fr auto;gap:3px 14px}
+.rows b{font-weight:400;color:var(--ink-2);text-align:right}
+.kd{display:flex;align-items:center;gap:9px;padding:9px 2px;border-bottom:1px solid var(--rule)}
+.kd:last-child{border-bottom:none}
+.kd .nm{flex:1;min-width:0;font-size:13.5px}
+.kd .n{font-size:11px;color:var(--ink-3);white-space:nowrap}
+.kd button{font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:14px;padding:2px 9px;white-space:nowrap}
+.kd button:hover{border-color:var(--accent);color:var(--accent)}
+.kd .mv{padding:2px 7px}
+.pz{border:1px solid var(--rule);border-radius:11px;margin-bottom:9px;overflow:hidden}
+.pz .ph{display:flex;align-items:center;gap:9px;padding:11px 13px;cursor:pointer}
+.pz .ph .nm{flex:1;min-width:0;font-size:13.5px}
+.pz .ph .n{font-size:11px;color:var(--ink-3)}
+.pz .ph .sw{font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:14px;padding:2px 9px}
+.pz .ph .sw.on{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.pz .ph .cv{font-size:11px;color:var(--ink-3);transition:transform .18s;display:inline-block}
+.pz .ph .cv.op{transform:rotate(180deg)}
+.pz .bd{padding:0 13px 14px;border-top:1px solid var(--rule)}
+.pz label{display:block;font-size:11px;color:var(--ink-3);margin:11px 0 4px}
+.pz input,.pz select,.pz textarea{width:100%;padding:8px 11px;border:1px solid var(--rule);
+  border-radius:7px;background:var(--paper);color:var(--ink);outline:none;font-size:12.5px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.pz textarea{font-family:inherit;min-height:76px;resize:vertical;line-height:1.6}
+.pz input:focus,.pz select:focus,.pz textarea:focus{border-color:var(--accent)}
+.pz .two{display:flex;gap:9px}
+.pz .two>div{flex:1;min-width:0}
+.pz .acts{display:flex;gap:8px;margin-top:14px}
+.pz .acts button{flex:1;padding:9px;border-radius:8px;font-size:12.5px}
+.pz .acts .save{background:var(--ink);color:var(--paper)}
+.pz .acts .rm{border:1px solid var(--rule);color:var(--warn);flex:0 0 auto;padding:9px 15px}
+.tres{background:var(--paper);border:1px solid var(--rule);border-radius:8px;
+  padding:11px 12px;margin-top:9px;font-size:12px;line-height:1.7}
+.tres .hit{color:var(--accent);margin-bottom:7px}
+.tres .miss{color:var(--warn)}
+.tres dl{display:grid;grid-template-columns:auto 1fr;gap:3px 11px;margin-bottom:9px}
+.tres dt{color:var(--ink-3);white-space:nowrap}
+.tres dd{color:var(--ink-2);word-break:break-word}
+.tres .bt{border-top:1px solid var(--rule);padding-top:8px;color:var(--ink-2);
+  white-space:pre-wrap;font-family:var(--serif);line-height:1.9}
+.tz{display:flex;align-items:center;gap:9px;padding:11px 2px;border-bottom:1px solid var(--rule)}
+.tz:last-child{border-bottom:none}
+.tz .b{flex:1;min-width:0}
+.tz .t{font-size:13px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tz .d{font-size:11px;color:var(--ink-3)}
+.tz .d.soon{color:var(--warn)}
+.tz button{font-size:11px;color:var(--ink-3);border:1px solid var(--rule);
+  border-radius:14px;padding:3px 10px;white-space:nowrap}
+.tz button:hover{border-color:var(--accent);color:var(--accent)}
+.tz button.rm:hover{border-color:var(--warn);color:var(--warn)}
+
+/* 예정 */
+.plan{border-top:1px solid var(--rule)}
+.plan li{list-style:none;padding:14px 3px;border-bottom:1px solid var(--rule);
+  display:flex;gap:12px;align-items:flex-start}
+.plan .ic{font-size:15px;width:20px;text-align:center;flex-shrink:0;line-height:1.3}
+.plan .b{flex:1;min-width:0}
+.plan .t{font-size:13.5px;margin-bottom:3px}
+.plan .d{font-size:11.5px;color:var(--ink-3);line-height:1.6}
+.plan .tag{font-size:10px;color:var(--ink-3);border:1px solid var(--rule);
+  padding:1px 8px;border-radius:14px;white-space:nowrap;align-self:center}
+</style>
+</head>
+<body>
+
+<div id="login" class="hide">
+  <div class="box" style="background:none;border:none;padding:0">
+    <h1>설정</h1>
+    <input id="em" type="email" placeholder="이메일" autocomplete="username">
+    <input id="pw" type="password" placeholder="비밀번호" autocomplete="current-password">
+    <button id="go">로그인</button>
+    <div class="err" id="lerr"></div>
+  </div>
+</div>
+
+<main id="app" class="hide">
+  <div class="head">
+    <h1><a href="./index.html">←</a>설정</h1>
+  </div>
+
+  <details class="sec" data-k="테마">
+  <summary><span class="lab">테마</span><span class="cv">▾</span></summary>
+  <div class="body">
+    
+    <div class="themes" id="themes"></div>
+    <p style="font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.7">
+      고른 테마는 이 기기에만 적용돼. 만든 테마는 어느 기기에서나 목록에 떠.
+    </p>
+  </div>
+</details>
+
+<details class="sec" data-k="글꼴">
+  <summary><span class="lab">글꼴</span><span class="cv">▾</span></summary>
+  <div class="body">
+    
+    <div class="box">
+      <p>웹폰트 주소를 넣으면 읽을 때 고를 수 있습니다.</p>
+      <div id="fonts" style="margin-top:12px"></div>
+      <button class="btn sub" id="faddb">＋ 글꼴 추가</button>
+    </div>
+  </div>
+</details>
+
+<details class="sec" data-k="태그">
+  <summary><span class="lab">태그</span><span class="cv">▾</span></summary>
+  <div class="body">
+    
+    <div class="box">
+      <p>로그를 나누는 이름표. 로그마다 하나씩 붙습니다.</p>
+      <div id="klist" style="margin-top:14px"></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <input id="knew" placeholder="새 태그 이름" style="flex:1;padding:9px 12px;border:1px solid var(--rule);
+          border-radius:8px;background:var(--paper);color:var(--ink);outline:none;font-size:13px">
+        <button class="btn" id="kadd" style="width:auto;flex:0 0 auto;white-space:nowrap;padding:9px 20px">추가</button>
+      </div>
+      <div class="stat" id="kmsg"></div>
+    </div>
+  </div>
+</details>
+
+<details class="sec" data-k="상태창 등록">
+  <summary><span class="lab">상태창 등록</span><span class="cv">▾</span></summary>
+  <div class="body">
+    
+    <div class="box" style="padding:14px 15px">
+      <p>카드마다 다른 상태창 모양을 등록합니다.</p>
+    </div>
+    <div id="plist" style="margin-top:11px"></div>
+    <button class="btn sub" id="padd" style="margin-top:0">＋ 상태창 추가</button>
+    <div style="display:flex;gap:8px;margin-top:9px">
+      <button class="btn sub" id="rp-new" style="margin-top:0">못 읽은 것만 다시</button>
+      <button class="btn sub" id="rp-all" style="margin-top:0">모든 로그 다시 읽기</button>
+    </div>
+    <div class="stat" id="pmsg"></div>
+  </div>
+</details>
+
+<details class="sec" data-k="리수 플러그인">
+  <summary><span class="lab">리수 플러그인</span><span class="cv">▾</span></summary>
+  <div class="body">
+
+    <div class="box">
+      <p>리수에서 채팅을 바로 밀어넣고 싶다면 <b>log_sender.js</b>를 리수 플러그인으로 추가하고,
+         플러그인 설정의 세 칸에 아래 값을 그대로 넣습니다.
+         수집 시크릿은 설치할 때 자동으로 만들어진 값이라 따로 정하지 않아도 됩니다.</p>
+      <div id="pgrows" style="margin-top:15px"></div>
+      <div class="stat" id="pgmsg"></div>
+    </div>
+  </div>
+</details>
+
+<details class="sec" data-k="백업">
+  <summary><span class="lab">백업</span><span class="cv">▾</span></summary>
+  <div class="body">
+    
+    <div class="box">
+      <p>모든 로그와 메시지를 파일 하나로 내려받아. 원본까지 통째로 담기니까 이것만 있으면 다시 세울 수 있어.</p>
+      <div style="height:14px"></div>
+      <button class="btn" id="dl">전체 내려받기</button>
+      <button class="btn sub" id="count">얼마나 있나 세어보기</button>
+      <div class="stat" id="st"></div>
+      <div class="rows hide" id="rows"></div>
+    </div>
+  </div>
+</details>
+
+</main>
+
+<div id="scrim2"></div>
+<div id="sheet"><div class="in" id="sheetIn"></div></div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { CFG } from './config.js';
+import { setParsers, runParser, normalizeMessage } from './parse.js';
+import { loadStyles, getThemes, getFonts, BASE_THEMES, BASE_FONTS, applyTheme } from './theme.js';
+
+const sb = createClient(CFG.url, CFG.key);
+const $ = id => document.getElementById(id);
+
+const apply = t => applyTheme(t);
+apply(localStorage.getItem('theme') || 'day');
+
+const openSheet = h => { $('sheetIn').innerHTML = h; $('sheet').classList.add('on'); $('scrim2').classList.add('on'); };
+const shutSheet = () => { $('sheet').classList.remove('on'); $('scrim2').classList.remove('on'); };
+
+$('go').onclick = async () => {
+  $('lerr').textContent = '';
+  const { error } = await sb.auth.signInWithPassword({ email: $('em').value.trim(), password: $('pw').value });
+  if (error) return $('lerr').textContent = '이메일이나 비밀번호를 다시 확인해줘';
+  boot();
+};
+$('pw').onkeydown = e => { if (e.key === 'Enter') $('go').click(); };
+sb.auth.getSession().then(({ data }) => {
+  if (data.session) boot();
+  else $('login').classList.remove('hide');
+});
+
+// 펼친 섹션 기억
+document.querySelectorAll('details.sec').forEach(d => {
+  if (localStorage.getItem('sec:' + d.dataset.k) === '1') d.open = true;
+  d.addEventListener('toggle', () =>
+    localStorage.setItem('sec:' + d.dataset.k, d.open ? '1' : '0'));
+});
+
+async function boot() {
+  $('login').classList.add('hide');
+  $('app').classList.remove('hide');
+  await loadStyles(sb);
+  paintThemes();
+  paintFonts();
+  loadKinds();
+  loadParsers();
+  loadPlugin();
+}
+
+
+
+// ── 상태창 해석기 ─────────────────────────────────────
+let parsers = [], openP = null;
+const pmsg = (t, cls) => { $('pmsg').textContent = t; $('pmsg').className = 'stat' + (cls ? ' ' + cls : ''); };
+
+const SAMPLE = '';
+
+async function loadParsers() {
+  const { data, error } = await sb.from('parsers').select('*').order('sort');
+  if (error) {
+    $('plist').innerHTML = `<p style="color:var(--warn);font-size:11.5px">
+      parsers 테이블이 아직 없어. 안내받은 SQL을 먼저 돌려줘.</p>`;
+    return;
+  }
+  parsers = data || [];
+  setParsers(parsers);
+  paintParsers();
+}
+
+function paintParsers() {
+  $('plist').innerHTML = parsers.map((p, i) => {
+    const on = openP === p.id;
+    return `<div class="pz">
+      <div class="ph" data-tog="${p.id}">
+        <span class="nm">${escape2(p.name)}</span>
+        <span class="sw ${p.enabled !== false ? 'on' : ''}" data-en="${p.id}">${p.enabled !== false ? '사용 중' : '꺼짐'}</span>
+        <span class="n">${i > 0 ? `<button data-up="${p.id}" style="border:none;color:inherit">↑</button>` : ''}${i < parsers.length - 1 ? `<button data-dn="${p.id}" style="border:none;color:inherit">↓</button>` : ''}</span>
+        <span class="cv ${on ? 'op' : ''}">▾</span>
+      </div>
+      ${on ? editor(p) : ''}
+    </div>`;
+  }).join('') || '<p style="font-size:11.5px;color:var(--ink-3)">아직 없어</p>';
+
+  const q = (sel, fn) => $('plist').querySelectorAll(sel).forEach(el => el.onclick = e => { e.stopPropagation(); fn(el.dataset); });
+  q('[data-tog]', d => { openP = openP === d.tog ? null : d.tog; paintParsers(); });
+  q('[data-en]', async d => {
+    const p = parsers.find(x => x.id === d.en);
+    await sb.from('parsers').update({ enabled: !(p.enabled !== false) }).eq('id', p.id);
+    loadParsers();
+  });
+  q('[data-up]', d => moveP(d.up, -1));
+  q('[data-dn]', d => moveP(d.dn, 1));
+
+  if (openP) bindEditor(parsers.find(x => x.id === openP));
+}
+
+function editor(p) {
+  const isRe = p.mode === 'regex';
+  return `<div class="bd">
+    <label>이름</label>
+    <input id="p-name" value="${escape2(p.name)}" style="font-family:inherit">
+
+    <label>방식</label>
+    <select id="p-mode" style="font-family:inherit">
+      <option value="fields"${!isRe ? ' selected' : ''}>칸 채우기 — 쉬움</option>
+      <option value="regex"${isRe ? ' selected' : ''}>정규식 직접 쓰기</option>
+    </select>
+
+    <div id="p-fields" class="${isRe ? 'hide' : ''}">
+      <div class="two">
+        <div><label>껍데기 시작</label><input id="p-open" value="${escape2(p.block_open || '')}" placeholder="&lt;Info_Board&gt;"></div>
+        <div><label>껍데기 끝</label><input id="p-close" value="${escape2(p.block_close || '')}" placeholder="&lt;/Info_Board&gt;"></div>
+      </div>
+      <div class="two">
+        <div><label>항목 나누기</label><input id="p-sep" value="${escape2(p.item_sep || '\\n')}" placeholder="\n 또는 |"></div>
+        <div><label>이름과 값 사이</label><input id="p-kv" value="${escape2(p.kv_sep || ':')}" placeholder=":"></div>
+      </div>
+    </div>
+
+    <div id="p-regex" class="${isRe ? '' : 'hide'}">
+      <label>블록 정규식 (괄호 안이 내용)</label>
+      <input id="p-br" value="${escape2(p.block_regex || '')}" placeholder="&lt;Info_Board&gt;([\\s\\S]*?)&lt;/Info_Board&gt;">
+      <label>항목 정규식 (괄호 둘 = 이름, 값)</label>
+      <input id="p-ir" value="${escape2(p.item_regex || '')}" placeholder="(\\w+)\\s*:\\s*([^\\n]+)">
+    </div>
+
+    <label>시험해보기 — 메시지를 붙여넣어봐</label>
+    <textarea id="p-test" placeholder="리수에서 메시지 하나를 복사해서 여기에">${escape2(SAMPLE)}</textarea>
+    <div class="tres" id="p-out">아직 아무것도 안 넣었어</div>
+
+    <div class="acts">
+      <button class="save" id="p-save">저장</button>
+      <button class="rm" id="p-rm">삭제</button>
+    </div>
+  </div>`;
+}
+
+function bindEditor(p) {
+  if (!p) return;
+  const cur = () => ({
+    name: $('p-name').value.trim() || '이름 없음',
+    mode: $('p-mode').value,
+    block_open: $('p-open')?.value ?? '',
+    block_close: $('p-close')?.value ?? '',
+    item_sep: $('p-sep')?.value ?? '\\n',
+    kv_sep: $('p-kv')?.value ?? ':',
+    block_regex: $('p-br')?.value ?? '',
+    item_regex: $('p-ir')?.value ?? '',
+  });
+
+  const test = () => {
+    const raw = $('p-test').value;
+    const out = $('p-out');
+    if (!raw.trim()) { out.innerHTML = '아직 아무것도 안 넣었어'; return; }
+    const r = runParser(cur(), raw);
+    if (!r) { out.innerHTML = '<div class="miss">이 설정으로는 못 읽었어</div>'; return; }
+    const rows = Object.entries(r.meta)
+      .map(([k, v]) => `<dt>${escape2(k)}</dt><dd>${escape2(v)}</dd>`).join('');
+    const body = raw.split(r.block).join('').replace(/\n{3,}/g, '\n\n').trim();
+    out.innerHTML =
+      `<div class="hit">읽었어 — 항목 ${Object.keys(r.meta).length}개</div>` +
+      `<dl>${rows}</dl>` +
+      `<div class="bt">${escape2(body.slice(0, 400))}${body.length > 400 ? '…' : ''}</div>`;
+  };
+
+  $('p-mode').onchange = () => {
+    const re = $('p-mode').value === 'regex';
+    $('p-fields').classList.toggle('hide', re);
+    $('p-regex').classList.toggle('hide', !re);
+    test();
+  };
+  ['p-open','p-close','p-sep','p-kv','p-br','p-ir','p-test'].forEach(id => {
+    const el = $(id); if (el) el.oninput = test;
+  });
+  test();
+
+  $('p-save').onclick = async () => {
+    const { error } = await sb.from('parsers').update(cur()).eq('id', p.id);
+    if (error) return pmsg(error.message, 'err');
+    pmsg('저장했어. 반영하려면 아래 다시 읽기를 눌러줘.', 'ok');
+    loadParsers();
+  };
+  $('p-rm').onclick = async () => {
+    if (!confirm(`'${p.name}' 상태창을 지울까?`)) return;
+    await sb.from('parsers').delete().eq('id', p.id);
+    openP = null;
+    loadParsers();
+  };
+}
+
+async function moveP(id, dir) {
+  const i = parsers.findIndex(p => p.id === id), j = i + dir;
+  if (j < 0 || j >= parsers.length) return;
+  await Promise.all([
+    sb.from('parsers').update({ sort: j + 1 }).eq('id', parsers[i].id),
+    sb.from('parsers').update({ sort: i + 1 }).eq('id', parsers[j].id),
+  ]);
+  loadParsers();
+}
+
+$('padd').onclick = async () => {
+  const { data, error } = await sb.from('parsers').insert({
+    name: '새 상태창', sort: parsers.length + 1, mode: 'fields',
+    block_open: '', block_close: '', item_sep: '\\n', kv_sep: ':',
+  }).select('id').single();
+  if (error) return pmsg(error.message, 'err');
+  openP = data.id;
+  loadParsers();
+};
+
+// ── 다시 읽기 ─────────────────────────────────────────
+async function reparse(all) {
+  const btn = all ? $('rp-all') : $('rp-new');
+  btn.disabled = true;
+  let done = 0, hit = 0;
+  try {
+    let last = null;
+    for (;;) {
+      let q = sb.from('messages').select('id,body_raw').order('id').limit(200);
+      if (!all) q = q.is('meta_format', null);
+      if (last) q = q.gt('id', last);
+      const { data, error } = await q;
+      if (error) throw error;
+      if (!data?.length) break;
+      last = data[data.length - 1].id;
+
+      for (const m of data) {
+        const nres = normalizeMessage(m.body_raw);
+        const { stats, ...upd } = nres;
+        const { error: e1 } = await sb.from('messages').update(upd).eq('id', m.id);
+        if (e1) throw e1;
+        await sb.from('message_stats').delete().eq('message_id', m.id);
+        if (stats.length) {
+          await sb.from('message_stats').insert(stats.map(x => ({
+            message_id: m.id, char_name: x.name,
+            affection: x.affection, tension: x.tension,
+            notes: { affection_note: x.affection_note, tension_note: x.tension_note },
+          })));
+        }
+        done++;
+        if (nres.meta_format) hit++;
+      }
+      pmsg(`${done}편 처리…`);
+      if (data.length < 200) break;
+    }
+    pmsg(done ? `${done}편 다시 읽었어 — 상태창 인식 ${hit}편` : '처리할 게 없어', 'ok');
+  } catch (err) {
+    pmsg('실패: ' + err.message, 'err');
+  }
+  btn.disabled = false;
+}
+$('rp-new').onclick = () => reparse(false);
+$('rp-all').onclick = () => { if (confirm('모든 메시지를 다시 읽을까? 시간이 좀 걸려.')) reparse(true); };
+
+// ── 종류 관리 ─────────────────────────────────────────
+let kinds = [], kindUse = {};
+const kmsg = (t, cls) => { $('kmsg').textContent = t; $('kmsg').className = 'stat' + (cls ? ' ' + cls : ''); };
+
+async function loadKinds() {
+  const [{ data, error }, { data: logs }] = await Promise.all([
+    sb.from('kinds').select('*').order('sort'),
+    sb.from('logs').select('kind'),
+  ]);
+  if (error) {
+    $('klist').innerHTML = `<p style="color:var(--warn);font-size:11.5px">
+      kinds 테이블이 아직 없어. 설정 안내의 SQL을 먼저 돌려줘.</p>`;
+    return;
+  }
+  kinds = data || [];
+  kindUse = {};
+  (logs || []).forEach(l => { const k = l.kind || 'archive'; kindUse[k] = (kindUse[k] || 0) + 1; });
+  paintKinds();
+}
+
+function paintKinds() {
+  $('klist').innerHTML = kinds.map((k, i) => `
+    <div class="kd">
+      <span class="nm">${escape2(k.label)}</span>
+      <span class="n">${kindUse[k.value] || 0}권</span>
+      <button class="mv" data-up="${k.value}"${i === 0 ? ' disabled style="opacity:.3"' : ''}>↑</button>
+      <button class="mv" data-dn="${k.value}"${i === kinds.length - 1 ? ' disabled style="opacity:.3"' : ''}>↓</button>
+      <button data-ren="${k.value}">이름</button>
+      <button data-del="${k.value}">삭제</button>
+    </div>`).join('') || '<p style="font-size:11.5px;color:var(--ink-3)">아직 없어</p>';
+
+  const on = (sel, fn) => $('klist').querySelectorAll(sel).forEach(b => b.onclick = () => fn(b.dataset));
+  on('[data-ren]', async d => {
+    const k = kinds.find(x => x.value === d.ren);
+    const n = prompt('태그 이름', k.label);
+    if (!n?.trim()) return;
+    const { error } = await sb.from('kinds').update({ label: n.trim() }).eq('value', k.value);
+    if (error) return kmsg(error.message, 'err');
+    loadKinds();
+  });
+  on('[data-del]', async d => {
+    const used = kindUse[d.del] || 0;
+    if (used) return kmsg(`이 태그를 쓴 로그가 ${used}권 있어. 먼저 다른 태그로 옮겨줘.`, 'err');
+    const k = kinds.find(x => x.value === d.del);
+    if (!confirm(`'${k.label}' 태그를 지울까?`)) return;
+    const { error } = await sb.from('kinds').delete().eq('value', d.del);
+    if (error) return kmsg(error.message, 'err');
+    kmsg('');
+    loadKinds();
+  });
+  on('[data-up]', d => move(d.up, -1));
+  on('[data-dn]', d => move(d.dn, 1));
+}
+
+async function move(value, dir) {
+  const i = kinds.findIndex(k => k.value === value);
+  const j = i + dir;
+  if (j < 0 || j >= kinds.length) return;
+  const a = kinds[i], b = kinds[j];
+  await Promise.all([
+    sb.from('kinds').update({ sort: j + 1 }).eq('value', a.value),
+    sb.from('kinds').update({ sort: i + 1 }).eq('value', b.value),
+  ]);
+  loadKinds();
+}
+
+$('kadd').onclick = async () => {
+  const label = $('knew').value.trim();
+  if (!label) return;
+  const base = label.replace(/[^a-z0-9]/gi, '').toLowerCase() || 'kind';
+  let value = base;
+  for (let n = 2; kinds.some(k => k.value === value); n++) value = base + n;
+  const { error } = await sb.from('kinds')
+    .insert({ value, label, sort: kinds.length + 1 });
+  if (error) return kmsg(error.message, 'err');
+  $('knew').value = '';
+  kmsg('');
+  loadKinds();
+};
+$('knew').onkeydown = e => { if (e.key === 'Enter') $('kadd').click(); };
+
+const escape2 = t => String(t ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function paintThemes() {
+  const cur = localStorage.getItem('theme') || 'day';
+  const list = getThemes();
+  $('themes').innerHTML = list.map(t => {
+    const v = t.vars;
+    return `<button class="th ${t.value === cur ? 'on' : ''}" data-t="${t.value}">
+      <div class="sw" style="background:${v.paper};color:${v.ink};border-color:${v.rule}">가</div>
+      <b>${escape2(t.name)}</b>
+      ${t.id ? `<span class="ed" data-tedit="${t.id}">고치기</span>` : ''}
+    </button>`;
+  }).join('') + `<button class="add" id="tadd">＋<br>새 테마</button>`;
+
+  $('themes').querySelectorAll('[data-t]').forEach(b => b.onclick = e => {
+    if (e.target.closest('[data-tedit]')) return;
+    localStorage.setItem('theme', b.dataset.t);
+    apply(b.dataset.t);
+    paintThemes();
+  });
+  $('themes').querySelectorAll('[data-tedit]').forEach(el => el.onclick = e => {
+    e.stopPropagation();
+    themeSheet(list.find(x => x.id === el.dataset.tedit));
+  });
+  $('tadd').onclick = () => themeSheet(null);
+}
+
+const CKEYS = [
+  ['paper', '바탕'], ['paper2', '카드 바탕'], ['ink', '글자'], ['ink2', '옅은 글자'],
+  ['ink3', '더 옅은 글자'], ['rule', '선'], ['accent', '강조'], ['soft', '강조 바탕'],
+];
+
+function themeSheet(t) {
+  const base = t?.vars || BASE_THEMES[1].vars;
+  const asJson = v => JSON.stringify(
+    Object.fromEntries(CKEYS.map(([k]) => [k, v[k] || '#ffffff'])), null, 2);
+
+  openSheet(`
+    <h3>${t ? '테마 고치기' : '새 테마'}</h3>
+
+    <label>이름</label>
+    <input id="t-n" value="${escape2(t?.name || '내 테마')}">
+
+    <label>어디서 시작할까</label>
+    <div class="seed">
+      ${BASE_THEMES.map(b => `<button data-seed="${b.value}"
+        style="background:${b.vars.paper};color:${b.vars.ink};border-color:${b.vars.rule}">${b.name}</button>`).join('')}
+    </div>
+
+    <label>색 (JSON)</label>
+    <textarea id="t-j" spellcheck="false">${escape2(asJson(base))}</textarea>
+    <div class="jrow">
+      <span id="t-err"></span>
+      <button id="t-copy">복사</button>
+    </div>
+
+    <details class="pick">
+      <summary>색 하나씩 고르기 <span class="cv">▾</span></summary>
+      <div class="cgrid">
+        ${CKEYS.map(([k, lb]) => `<div class="c"><label>${lb}</label>
+          <input type="color" id="tc-${k}" value="${escape2(base[k] || '#ffffff')}"></div>`).join('')}
+      </div>
+    </details>
+
+    <label>미리보기</label>
+    <div id="t-pv" style="border-radius:10px;padding:15px;border:1px solid var(--rule);margin-bottom:8px">
+      <div style="font-family:var(--serif);font-size:15px;margin-bottom:7px">가나다 ABC 123</div>
+      <div style="font-size:11.5px;margin-bottom:9px">옅은 글자입니다</div>
+      <span id="t-chip" style="font-size:11px;padding:2px 9px;border-radius:14px">강조</span>
+    </div>
+
+    <div class="srow">
+      <button class="no" id="t-x">닫기</button>
+      <button class="ok" id="t-s">저장</button>
+    </div>
+    ${t ? `<button class="del" id="t-d">이 테마 삭제</button>` : ''}
+  `);
+
+  let vars = { ...base };
+
+  // JSON → 색·미리보기
+  const fromJson = () => {
+    try {
+      const o = JSON.parse($('t-j').value);
+      const bad = CKEYS.filter(([k]) => !/^#[0-9a-f]{3,8}$/i.test(String(o[k] || '')));
+      if (bad.length) throw new Error('색이 빠졌거나 형식이 달라: ' + bad.map(x => x[0]).join(', '));
+      vars = Object.fromEntries(CKEYS.map(([k]) => [k, o[k]]));
+      CKEYS.forEach(([k]) => { const el = $('tc-' + k); if (el) el.value = vars[k]; });
+      $('t-err').textContent = '';
+      $('t-err').className = '';
+      $('t-s').disabled = false;
+      $('t-s').style.opacity = '1';
+      paintPv();
+    } catch (e) {
+      $('t-err').textContent = e.message.startsWith('색이') ? e.message : 'JSON 형식이 틀렸어';
+      $('t-err').className = 'bad';
+      $('t-s').disabled = true;
+      $('t-s').style.opacity = '.4';
+    }
+  };
+
+  // 피커 → JSON
+  const fromPicker = () => {
+    vars = Object.fromEntries(CKEYS.map(([k]) => [k, $('tc-' + k).value]));
+    $('t-j').value = asJson(vars);
+    $('t-err').textContent = '';
+    $('t-err').className = '';
+    $('t-s').disabled = false;
+    $('t-s').style.opacity = '1';
+    paintPv();
+  };
+
+  function paintPv() {
+    const el = $('t-pv');
+    el.style.background = vars.paper2;
+    el.style.borderColor = vars.rule;
+    el.children[0].style.color = vars.ink;
+    el.children[1].style.color = vars.ink3;
+    const chip = $('t-chip');
+    chip.style.background = vars.soft;
+    chip.style.color = vars.accent;
+  }
+
+  $('t-j').oninput = fromJson;
+  CKEYS.forEach(([k]) => { const el = $('tc-' + k); if (el) el.oninput = fromPicker; });
+
+  $('sheetIn').querySelectorAll('[data-seed]').forEach(b => b.onclick = () => {
+    const src = BASE_THEMES.find(x => x.value === b.dataset.seed);
+    $('t-j').value = asJson(src.vars);
+    fromJson();
+  });
+
+  $('t-copy').onclick = async () => {
+    try {
+      await navigator.clipboard.writeText($('t-j').value);
+      $('t-copy').textContent = '복사됨';
+      setTimeout(() => $('t-copy').textContent = '복사', 1400);
+    } catch (_) {
+      $('t-j').select();
+    }
+  };
+
+  paintPv();
+
+  $('t-x').onclick = shutSheet;
+  $('t-s').onclick = async () => {
+    const row = { kind: 'theme', name: $('t-n').value.trim() || '내 테마', vars };
+    const { error } = t
+      ? await sb.from('styles').update(row).eq('id', t.id)
+      : await sb.from('styles').insert(row);
+    if (error) return alert(error.message);
+    shutSheet();
+    await loadStyles(sb);
+    paintThemes();
+  };
+  if (t) $('t-d').onclick = async () => {
+    if (!confirm(`'${t.name}' 테마를 지울까?`)) return;
+    await sb.from('styles').delete().eq('id', t.id);
+    if (localStorage.getItem('theme') === t.value) { localStorage.setItem('theme', 'day'); apply('day'); }
+    shutSheet();
+    await loadStyles(sb);
+    paintThemes();
+  };
+}
+
+// ── 글꼴 ──────────────────────────────────────────────
+function paintFonts() {
+  const mine = getFonts().filter(f => f.id);
+  $('fonts').innerHTML =
+    BASE_FONTS.map(f => `<div class="fz">
+      <div class="b"><div class="t" style="font-family:${f.family}">${escape2(f.name)}</div>
+        <div class="d">기본 · 굵기 ${f.weights.length}단계</div></div>
+    </div>`).join('') +
+    mine.map(f => `<div class="fz">
+      <div class="b"><div class="t" style="font-family:${f.family}">${escape2(f.name)}</div>
+        <div class="d">굵기 ${f.weights.join(', ')}</div></div>
+      <button data-fedit="${f.id}">고치기</button>
+    </div>`).join('');
+  $('fonts').querySelectorAll('[data-fedit]').forEach(b =>
+    b.onclick = () => fontSheet(mine.find(f => f.id === b.dataset.fedit)));
+}
+
+function fontSheet(f) {
+  openSheet(`
+    <h3>${f ? '글꼴 고치기' : '새 글꼴'}</h3>
+    <label>이름</label><input id="f-n" value="${escape2(f?.name || '')}" placeholder="예: 마루 부리">
+    <label>웹폰트 주소 (CSS 링크)</label>
+    <input id="f-u" value="${escape2(f?.css_url || '')}" placeholder="https://fonts.googleapis.com/css2?family=...">
+    <label>글꼴 이름 (font-family)</label>
+    <input id="f-f" value="${escape2(f?.family || '')}" placeholder="'MaruBuri', serif">
+    <label>가진 굵기 (쉼표로)</label>
+    <input id="f-w" value="${escape2((f?.weights || [400]).join(','))}" placeholder="300,400,700">
+    <div style="font-size:11px;color:var(--ink-3);line-height:1.7;margin:-6px 0 13px">
+      구글 폰트라면 그 폰트 페이지에서 주는 링크 주소를 그대로 넣으면 돼.
+      가진 굵기를 정확히 적어야 굵기 조절이 제대로 나와.
+    </div>
+    <label>미리보기</label>
+    <div id="f-pv" style="border:1px solid var(--rule);border-radius:10px;padding:14px;
+      margin-bottom:8px;font-size:16px;line-height:1.9">가나다라마 ABC 123</div>
+    <div class="srow">
+      <button class="no" id="f-x">닫기</button>
+      <button class="ok" id="f-s">저장</button>
+    </div>
+    ${f ? `<button class="del" id="f-d">이 글꼴 삭제</button>` : ''}
+  `);
+
+  let linkEl = null;
+  const pv = () => {
+    const u = $('f-u').value.trim();
+    if (u && (!linkEl || linkEl.getAttribute('href') !== u)) {
+      if (linkEl) linkEl.remove();
+      linkEl = document.createElement('link');
+      linkEl.rel = 'stylesheet';
+      linkEl.href = u;
+      document.head.appendChild(linkEl);
+    }
+    $('f-pv').style.fontFamily = $('f-f').value || 'inherit';
+  };
+  ['f-u', 'f-f'].forEach(id => $(id).oninput = pv);
+  pv();
+
+  $('f-x').onclick = shutSheet;
+  $('f-s').onclick = async () => {
+    const row = {
+      kind: 'font',
+      name: $('f-n').value.trim() || '이름 없음',
+      css_url: $('f-u').value.trim() || null,
+      family: $('f-f').value.trim(),
+      weights: $('f-w').value.trim() || '400',
+    };
+    if (!row.family) return alert('글꼴 이름(font-family)은 있어야 해');
+    const { error } = f
+      ? await sb.from('styles').update(row).eq('id', f.id)
+      : await sb.from('styles').insert(row);
+    if (error) return alert(error.message);
+    shutSheet();
+    await loadStyles(sb);
+    paintFonts();
+  };
+  if (f) $('f-d').onclick = async () => {
+    if (!confirm(`'${f.name}' 글꼴을 지울까?`)) return;
+    await sb.from('styles').delete().eq('id', f.id);
+    if (localStorage.getItem('ff') === f.value) localStorage.setItem('ff', 'ridi');
+    shutSheet();
+    await loadStyles(sb);
+    paintFonts();
+  };
+}
+$('faddb').onclick = () => fontSheet(null);
+
+// ── 백업 ─────────────────────────────────────────────
+const TABLES = [
+  ['profile', '프로필'],
+  ['characters', '캐릭터'],
+  ['folders', '폴더'],
+  ['logs', '로그'],
+  ['log_cast', '로그–캐릭터 연결'],
+  ['messages', '메시지'],
+  ['message_stats', '스탯'],
+  ['notes', '노트'],
+  ['read_state', '읽던 위치'],
+  ['bookmarks', '북마크'],
+];
+const PAGE = 1000;
+
+const say = (t, cls) => { $('st').textContent = t; $('st').className = 'stat' + (cls ? ' ' + cls : ''); };
+
+async function fetchAll(table, onStep) {
+  const out = [];
+  for (let i = 0; ; i += PAGE) {
+    const { data, error } = await sb.from(table).select('*').range(i, i + PAGE - 1);
+    if (error) {
+      if (/does not exist|schema cache/i.test(error.message)) return null;
+      throw new Error(`${table}: ${error.message}`);
+    }
+    out.push(...data);
+    onStep?.(out.length);
+    if (data.length < PAGE) break;
+  }
+  return out;
+}
+
+$('count').onclick = async () => {
+  $('count').disabled = true;
+  say('세는 중…');
+  try {
+    const rows = [];
+    for (const [t, label] of TABLES) {
+      let cq = sb.from(t).select('id', { count: 'exact', head: true });
+      if (t === 'logs') cq = cq.is('deleted_at', null);
+      const { count, error } = await cq;
+      if (error && /does not exist|schema cache/i.test(error.message)) continue;
+      rows.push([label, count ?? 0]);
+    }
+    $('rows').classList.remove('hide');
+    $('rows').innerHTML = rows.map(([l, n]) => `<span>${l}</span><b>${n.toLocaleString()}</b>`).join('');
+    say('');
+  } catch (err) {
+    say('실패: ' + err.message, 'err');
+  }
+  $('count').disabled = false;
+};
+
+$('dl').onclick = async () => {
+  $('dl').disabled = true;
+  const dump = { format: 'log-library-backup', version: 1, at: new Date().toISOString(), tables: {} };
+  try {
+    for (const [t, label] of TABLES) {
+      say(`${label} 모으는 중…`);
+      const rows = await fetchAll(t, n => say(`${label} 모으는 중… ${n.toLocaleString()}`));
+      if (rows === null) continue;
+      dump.tables[t] = rows;
+    }
+
+    const json = JSON.stringify(dump);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `log-library-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+    const mb = (blob.size / 1048576).toFixed(1);
+    const n = Object.values(dump.tables).reduce((s, r) => s + r.length, 0);
+    say(`내려받았어 — ${n.toLocaleString()}줄 · ${mb}MB`, 'ok');
+  } catch (err) {
+    say('실패: ' + err.message, 'err');
+  }
+  $('dl').disabled = false;
+};
+
+// ── 리수 플러그인 ─────────────────────────────────────
+function pluginRow(label, value, secret) {
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'margin-bottom:11px';
+
+  const lab = document.createElement('div');
+  lab.textContent = label;
+  lab.style.cssText = 'font-size:11px;color:var(--ink-3);margin-bottom:5px';
+
+  const line = document.createElement('div');
+  line.style.cssText = 'display:flex;gap:8px';
+
+  const box = document.createElement('input');
+  box.readOnly = true;
+  box.value = value;
+  if (secret) box.type = 'password';
+  box.style.cssText = 'flex:1;min-width:0;padding:9px 12px;border:1px solid var(--rule);' +
+    'border-radius:8px;background:var(--paper);color:var(--ink);outline:none;' +
+    'font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace';
+  box.onfocus = () => box.select();
+
+  const btn = document.createElement('button');
+  btn.className = 'btn';
+  btn.textContent = '복사';
+  btn.style.cssText = 'width:auto;flex:0 0 auto;white-space:nowrap;padding:9px 18px;margin-top:0';
+  btn.onclick = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      btn.textContent = '됐어';
+    } catch {
+      box.type = 'text';
+      box.select();
+      btn.textContent = '직접 복사';
+    }
+    setTimeout(() => { btn.textContent = '복사'; }, 1400);
+  };
+
+  line.append(box, btn);
+  if (secret) {
+    const eye = document.createElement('button');
+    eye.className = 'btn sub';
+    eye.textContent = '보기';
+    eye.style.cssText = 'width:auto;flex:0 0 auto;white-space:nowrap;padding:9px 16px;margin-top:0';
+    eye.onclick = () => {
+      const hidden = box.type === 'password';
+      box.type = hidden ? 'text' : 'password';
+      eye.textContent = hidden ? '숨기기' : '보기';
+    };
+    line.append(eye);
+  }
+
+  wrap.append(lab, line);
+  return wrap;
+}
+
+async function loadPlugin() {
+  const host = $('pgrows');
+  const msg = (t, cls) => { $('pgmsg').textContent = t; $('pgmsg').className = 'stat' + (cls ? ' ' + cls : ''); };
+
+  host.replaceChildren(
+    pluginRow('supabase_url', CFG.url, false),
+    pluginRow('anon_key', CFG.key, false)
+  );
+  msg('');
+
+  const { data, error } = await sb.rpc('get_ingest_secret');
+
+  if (error) {
+    msg(/function|schema cache|does not exist/i.test(error.message)
+      ? '수집 시크릿을 꺼낼 수 없어. setup.sql 최신본을 SQL Editor 에 다시 한 번 붙여넣고 Run 해줘.'
+      : '수집 시크릿을 못 읽었어: ' + error.message, 'err');
+    return;
+  }
+  if (!data) {
+    msg('수집 시크릿이 아직 없어. setup.sql 을 다시 돌리면 자동으로 만들어져.', 'err');
+    return;
+  }
+  host.append(pluginRow('ingest_secret', data, true));
+}
+</script>
+</body>
+</html>
